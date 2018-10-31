@@ -30,8 +30,12 @@
           name: '查看绩效'
         }, {
           type: 'list',
-          icon: require('../assets/icon_table.png'),
+          icon: require('../assets/icon_assist.png'),
           name: '管辖设备'
+        }, {
+          type: 'monList',
+          icon: require('../assets/icon_list.png'),
+          name: '查看计划完成情况'
         }]
       }
     },

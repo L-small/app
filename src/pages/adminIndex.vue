@@ -2,7 +2,7 @@
   <div class="index">
     <el-row :gutter="20">
       <el-col :span="6" v-for="(item, index) in adminFuns">
-        <div class="item" :class="item.class" @click="toFun(item)">
+        <div class="item icon" @click="toFun(item)">
           <img :src="item.icon" alt="">
           <p>{{item.name}}</p>
         </div>
@@ -17,25 +17,25 @@
     data() {
       return {
         adminFuns: [{
-          class: 'icon1',
           type: 'adminToday',
           icon: require('../assets/icon_table.png'),
           name: '查看今日计划'
         }, {
-          class: 'icon1',
           type: 'adminMonth',
           icon: require('../assets/icon_prod.png'),
           name: '查看班组月计划'
         }, {
-          class: 'icon1',
           type: 'adminScore',
           icon: require('../assets/icon_score.png'),
           name: '设定绩效'
         }, {
-          class: 'icon1',
           type: 'adminList',
           icon: require('../assets/icon_assist.png'),
           name: '设备主人清单'
+        }, {
+          type: 'adminMonList',
+          icon: require('../assets/icon_list.png'),
+          name: '查看月计划完成情况'
         }]
       }
     },
@@ -61,41 +61,21 @@
   
   .item {
     width: 130px;
-    height: 140px;
+    height: 120px;
     max-width: 140px;
     max-height: 180px;
     margin: 20px auto;
-    padding: 20px 5px 0px;
+    padding: 40px 5px 0px;
     border: 1px solid #ddd;
     text-align: center;
     color: #fff;
   }
   
-  .item.icon1 {
+  .item.icon {
     background: #19BBFE;
   }
-  
-  .item.icon2 {
-    background: #FF7262;
-  }
-  
-  .item.icon3 {
-    background: #E5910A;
-  }
-  
-  .item.icon4 {
-    background: #BE3C0B;
-  }
-  
-  .item.icon5 {
-    background: #1B3F53;
-  }
-  
-  .item.icon6 {
-    background: #34790E;
-  }
-  
-  .item.icon7 {
-    background: #52A84C;
+  .item img {
+    width: 24px;
+    height: 24px;
   }
 </style>

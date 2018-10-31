@@ -12,6 +12,8 @@ import AdminList from './pages/adminList.vue'
 import AdminMonth from './pages/adminMonth.vue'
 import AdminToday from './pages/adminToday.vue'
 import Submit from './pages/submit.vue'
+import MonList from './pages/monList.vue'
+import AdminMonList from './pages/adminMonList.vue'
 
 Vue.use(VueRouter)
 const router = new VueRouter({
@@ -64,6 +66,14 @@ const router = new VueRouter({
     path: '/submit',
     name: 'submit',
     component: Submit,
+  }, {
+    path: '/adminMonList',
+    name: 'adminMonList',
+    component: AdminMonList,
+  }, {
+    path: '/monList',
+    name: 'monList',
+    component: MonList,
   }, {
     path: '*',
     redirect: '/login',
