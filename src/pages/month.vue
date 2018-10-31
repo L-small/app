@@ -106,7 +106,7 @@
       </el-collapse-item>
     </el-collapse>
     <div class="footer">
-      <el-button class="btn" type="success">提交计划</el-button>
+      <el-button class="btn" type="success" @click="submit">提交计划</el-button>
     </div>
   </div>
 </template>
@@ -163,8 +163,12 @@
       }
     },
     methods: {
-      handleChange(val) {
-        console.log(val);
+      handleChange() {
+        // console.log(val);
+      },
+      submit() {
+        alert('提交成功');
+        history.go(-1);
       }
     },
     components: {

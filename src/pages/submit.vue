@@ -67,7 +67,8 @@
     data() {
       return {
         dialogImageUrl: '',
-        dialogVisible: false
+        dialogVisible: false,
+        textarea3: ''
       }
     },
     methods: {

@@ -6,7 +6,7 @@
           <p>检查变电站是否建立应有、现有图档清册</p>
           <div class="option">
             <el-button type="danger">驳回</el-button>
-            <el-button type="success">确认完成</el-button>
+            <el-button type="success" @click="submit">确认完成</el-button>
           </div>
         </div>
       </el-collapse-item>
@@ -15,7 +15,7 @@
           <p>参与运行检修规程审查</p>
           <div class="option">
             <el-button type="danger">驳回</el-button>
-            <el-button type="success">确认完成</el-button>
+            <el-button type="success" @click="submit">确认完成</el-button>
           </div>
         </div>
       </el-collapse-item>
@@ -24,7 +24,7 @@
           <p>检查是否按期开展设备状态评价及基准风险评估</p>
           <div class="option">
             <el-button type="danger">驳回</el-button>
-            <el-button type="success">确认完成</el-button>
+            <el-button type="success" @click="submit">确认完成</el-button>
           </div>
         </div>
       </el-collapse-item>
@@ -33,7 +33,7 @@
           <p>根据设备缺陷、隐患、异常跟踪等情况，负责设备状态评价，确保设备状态评价结果是否与设备实际情况相符</p>
           <div class="option">
             <el-button type="danger">驳回</el-button>
-            <el-button type="success">确认完成</el-button>
+            <el-button type="success" @click="submit">确认完成</el-button>
           </div>
         </div>
       </el-collapse-item>
@@ -63,8 +63,11 @@
       }
     },
     methods: {
-      handleChange(val) {
-        console.log(val);
+      handleChange() {
+        // console.log(val);
+      },
+      submit() {
+        alert('审核成功')
       }
     },
     components: {

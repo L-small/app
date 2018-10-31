@@ -40,18 +40,6 @@
       }
     },
     created() {
-      try {
-        localStorage.setItem('test', '123')
-      } catch(e) {
-        console.log(e)
-        alert('buxing')
-      }
-      try {
-        document.title = '测试'
-      } catch(e) {
-        console.log(e)
-        alert('title buxing')
-      }
     },
     methods: {
       toFun(item) {

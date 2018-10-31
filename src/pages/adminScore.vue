@@ -22,7 +22,7 @@
       </el-table-column>
     </el-table>
     <div class="footer">
-      <el-button class="btn" type="success">确认</el-button>
+      <el-button class="btn" type="success" @click="submit">确认</el-button>
     </div>
   </div>
 </template>
@@ -53,7 +53,12 @@
     created() {
   
     },
-    methods: {},
+    methods: {
+      submit() {
+        alert('评分成功');
+        history.go(-1);
+      }
+    },
     components: {
   
     }

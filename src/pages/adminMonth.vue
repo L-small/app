@@ -16,7 +16,7 @@
       </el-table-column>
     </el-table>
     <div class="notify">
-      <el-button type="primary">通知所有未编辑人员</el-button>
+      <el-button type="primary" @click="notify">通知所有未编辑人员</el-button>
     </div>
   </div>
 </template>
@@ -59,7 +59,12 @@
         }]
       }
     },
-    methods: {},
+    methods: {
+      notify() {
+        alert('已发送通知给相关人员')
+        history.go(-1)
+      }
+    },
     components: {
   
     }
