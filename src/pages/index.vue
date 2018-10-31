@@ -32,10 +32,6 @@
           type: 'list',
           icon: require('../assets/icon_table.png'),
           name: '管辖设备'
-        }, {
-          type: 'userInfo',
-          icon: require('../assets/icon_user.png'),
-          name: '个人信息'
         }]
       }
     },

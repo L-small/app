@@ -19,7 +19,7 @@
         adminFuns: [{
           class: 'icon1',
           type: 'adminToday',
-          icon: require('../assets/icon_prod.png'),
+          icon: require('../assets/icon_table.png'),
           name: '查看今日计划'
         }, {
           class: 'icon1',
@@ -29,12 +29,12 @@
         }, {
           class: 'icon1',
           type: 'adminScore',
-          icon: require('../assets/icon_prod.png'),
+          icon: require('../assets/icon_score.png'),
           name: '设定绩效'
         }, {
           class: 'icon1',
           type: 'adminList',
-          icon: require('../assets/icon_prod.png'),
+          icon: require('../assets/icon_assist.png'),
           name: '设备主人清单'
         }]
       }
