@@ -1,13 +1,24 @@
 <template>
   <div class="score">
     <el-table :data="tableData" stripe style="width: 100%">
+      <el-table-column prop="index" label="序号" width="50">
+      </el-table-column>
       <el-table-column prop="name" label="姓名" width="80">
       </el-table-column>
-      <el-table-column prop="score" label="个人30%绩效">
+      <el-table-column label="个人30%绩效">
+        <template slot-scope="scope">
+          <el-input></el-input>
+        </template>
       </el-table-column>
-      <el-table-column prop="detail" label="实际分配所得">
+      <el-table-column label="实际分配所得">
+        <template slot-scope="scope">
+          <el-input></el-input>
+        </template>
       </el-table-column>
-      <el-table-column prop="diff" label="差额">
+      <el-table-column label="差额">
+        <template slot-scope="scope">
+          <el-input></el-input>
+        </template>
       </el-table-column>
     </el-table>
     <div class="footer">
@@ -18,14 +29,24 @@
 
 <script>
   export default {
-    name: 'score',
+    name: 'index',
     data() {
       return {
         tableData: [{
-          name: '王金斌',
-          score: 631,
-          detail: 654,
-          diff: 87
+          index: 1,
+          name: '朱金勇'
+        }, {
+          index: 2,
+          name: '王金斌'
+        }, {
+          index: 3,
+          name: '马锦波'
+        }, {
+          index: 4,
+          name: '高红'
+        }, {
+          index: 5,
+          name: '代红丽'
         }]
       }
     },

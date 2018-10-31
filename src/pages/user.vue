@@ -1,13 +1,5 @@
 <template>
-  <div class="index">
-    <el-row :gutter="20">
-      <el-col :span="6" v-for="(item, index) in userFuns">
-        <div class="item icon" @click="toFun(item)">
-          <img :src="item.icon" alt="">
-          <p>{{item.name}}</p>
-        </div>
-      </el-col>
-    </el-row>
+  <div class="user">
   </div>
 </template>
 
@@ -21,7 +13,7 @@
           icon: require('../assets/icon_prod.png'),
           name: '个人计划编辑(生产类)'
         }, {
-          type: 'today',
+          type: 'info',
           icon: require('../assets/icon_table.png'),
           name: '提交今日计划'
         }, {

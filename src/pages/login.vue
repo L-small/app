@@ -86,9 +86,9 @@
     methods: {
       onSubmit() {
         if (this.form.userName === '田金周' || this.form.userName === '马锦波') {
-          this.$router.push({name: 'index', params: {type: 'admin'}})
+          this.$router.push({name: 'adminIndex'})
         } else {
-          this.$router.push({name: 'index', params: {type: 'user'}})
+          this.$router.push({name: 'index'})
         }
       }
     },
