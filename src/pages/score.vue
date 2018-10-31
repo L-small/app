@@ -10,9 +10,6 @@
       <el-table-column prop="diff" label="差额">
       </el-table-column>
     </el-table>
-    <div class="footer">
-      <el-button class="btn" type="success">确认</el-button>
-    </div>
   </div>
 </template>
 
@@ -40,18 +37,4 @@
 </script>
 
 <style scoped>
-  .footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 55px;
-    line-height: 55px;
-    text-align: center;
-    background: #fff;
-  }
-  
-  .footer .btn {
-    width: 300px;
-  }
 </style>

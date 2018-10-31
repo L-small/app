@@ -73,15 +73,18 @@
   }
   
   .item {
-    width: 130px;
-    height: 140px;
-    max-width: 140px;
-    max-height: 180px;
+    width: 110px;
+    height: 120px;
     margin: 20px auto;
-    padding: 20px 5px 0px;
+    padding: 40px 5px 0px;
     border: 1px solid #ddd;
     text-align: center;
     color: #fff;
+  }
+  
+  .item img {
+    width: 24px;
+    height: 24px;
   }
   
   .item.icon {

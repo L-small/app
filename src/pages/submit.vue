@@ -34,22 +34,7 @@
   }
   
   li {
-    position: relative;
     padding: 15px 0;
-  }
-  
-  li:after {
-    position: absolute;
-    bottom: 0px;
-    content: '';
-    display: block;
-    width: 100%;
-    height: 1px;
-    background: #ddd;
-  }
-  
-  li:last-of-type:after {
-    display: none;
   }
   
   .label {

@@ -33,7 +33,7 @@
   
   .form {
     width: 400px;
-    margin: 300px auto 0 auto;
+    margin: 270px auto 0 auto;
   }
   
   .form .item {
@@ -51,16 +51,16 @@
     data() {
       return {
         form: {
-          group: '',
-          userName: '',
+          group: '一班',
+          userName: '田金周',
           password: ''
         },
         groups: [{
-          value: '一组',
-          label: '一组'
+          value: '一班',
+          label: '一班'
         }, {
-          value: '二组',
-          label: '二组'
+          value: '二班',
+          label: '二班'
         }],
         userNames: [{
           value: '田金周',
