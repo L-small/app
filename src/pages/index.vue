@@ -24,7 +24,6 @@
 </template>
 
 <script>
-document.title = '测试'
   export default {
     name: 'index',
     data() {
@@ -95,6 +94,12 @@ document.title = '测试'
       } catch(e) {
         console.log(e)
         alert('buxing')
+      }
+      try {
+        document.title = '测试'
+      } catch(e) {
+        console.log(e)
+        alert('title buxing')
       }
     },
     methods: {
