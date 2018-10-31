@@ -1,25 +1,35 @@
 <template>
   <div class="index">
-    <el-row :gutter="20">
-      <el-col :span="6" v-for="(item, index) in funs">
-        <div class="item" :class="item.class" @click="toFun(item)">
-          <img :src="item.icon" alt="">
-          <p>{{item.name}}</p>
-        </div>
-      </el-col>
-    </el-row>
-    <div class="fun">
-      
+    <div v-if="curEnv === 'user'">
+      <el-row :gutter="20">
+        <el-col :span="6" v-for="(item, index) in userFuns">
+          <div class="item" :class="item.class" @click="toFun(item)">
+            <img :src="item.icon" alt="">
+            <p>{{item.name}}</p>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+    <div v-if="curEnv === 'admin'">
+      <el-row :gutter="20">
+        <el-col :span="6" v-for="(item, index) in adminFuns">
+          <div class="item" :class="item.class" @click="toFun(item)">
+            <img :src="item.icon" alt="">
+            <p>{{item.name}}</p>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
 
 <script>
+document.title = '测试'
   export default {
     name: 'index',
     data() {
       return {
-        funs: [{
+        userFuns: [{
           class: 'icon1',
           type: 'month',
           icon: require('../assets/icon_prod.png'),
@@ -38,19 +48,40 @@
           class: 'icon4',
           type: 'score',
           icon: require('../assets/icon_score.png'),
-          name: '查看得分'
+          name: '查看绩效'
         }, {
           class: 'icon5',
           type: 'list',
           icon: require('../assets/icon_table.png'),
-          name: '查看设备主人清单'
+          name: '管辖设备'
         }, {
           class: 'icon6',
           type: 'userInfo',
           icon: require('../assets/icon_user.png'),
           name: '个人信息'
         }],
-        curEnv: 'user'
+        curEnv: 'user',
+        adminFuns: [{
+          class: 'icon1',
+          type: 'month',
+          icon: require('../assets/icon_prod.png'),
+          name: '查看计划(生产类)'
+        }, {
+          class: 'icon1',
+          type: 'month',
+          icon: require('../assets/icon_prod.png'),
+          name: '查看计划(辅助类)'
+        }, {
+          class: 'icon1',
+          type: 'month',
+          icon: require('../assets/icon_prod.png'),
+          name: '设定绩效'
+        }, {
+          class: 'icon1',
+          type: 'list',
+          icon: require('../assets/icon_prod.png'),
+          name: '设备主人清单'
+        }]
       }
     },
     created() {
@@ -59,10 +90,18 @@
       } else {
         this.curEnv = 'admin'
       }
+      try {
+        localStorage.setItem('test', '123')
+      } catch(e) {
+        console.log(e)
+        alert('buxing')
+      }
     },
     methods: {
       toFun(item) {
-        this.$router.push({name: item.type})
+        this.$router.push({
+          name: item.type
+        })
       }
     },
     components: {
@@ -88,24 +127,31 @@
     text-align: center;
     color: #fff;
   }
+  
   .item.icon1 {
     background: #19BBFE;
-  } 
+  }
+  
   .item.icon2 {
     background: #FF7262;
   }
+  
   .item.icon3 {
     background: #E5910A;
   }
+  
   .item.icon4 {
     background: #BE3C0B;
   }
+  
   .item.icon5 {
     background: #1B3F53;
   }
+  
   .item.icon6 {
     background: #34790E;
   }
+  
   .item.icon7 {
     background: #52A84C;
   }
