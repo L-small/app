@@ -19,9 +19,9 @@
     data() {
       return {
         tableData: [{
-          name: '王金斌',
+          name: '吴鑫',
           score: 631,
-          detail: 654,
+          detail: 354,
           diff: 87
         }]
       }

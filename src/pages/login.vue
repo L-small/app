@@ -80,12 +80,15 @@
         }, {
           value: '陈娟2',
           label: '陈娟2'
+        }, {
+          value: '吴鑫',
+          label: '吴鑫'
         }]
       }
     },
     methods: {
       onSubmit() {
-        if (this.form.userName === '田金周' || this.form.userName === '马锦波') {
+        if (this.form.userName === '田金周' || this.form.userName === '马锦波' || this.form.userName === '王金斌') {
           this.$router.push({name: 'adminIndex'})
         } else {
           this.$router.push({name: 'index'})

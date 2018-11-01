@@ -11,9 +11,12 @@
       </el-table-column>
       <el-table-column prop="equipB" label="设备主人B角" width="65">
       </el-table-column>
-      <el-table-column prop="gourp" label="所在班组" width="80">
-      </el-table-column>
       <el-table-column prop="content" label="设备范围">
+      </el-table-column>
+      <el-table-column prop="option" label="操作" width="80">
+        <template slot-scope="scope">
+          <el-button @click="toDetail">调整</el-button>
+        </template>
       </el-table-column>
     </el-table>
   </div>
@@ -199,7 +202,11 @@
         }]
       }
     },
-    methods: {},
+    methods: {
+      toDetail() {
+        this.$router.push({name: 'adminAdjustDetail'})
+      }
+    },
     components: {
   
     }

@@ -21,9 +21,13 @@
           icon: require('../assets/icon_prod.png'),
           name: '个人计划编辑(生产类)'
         }, {
+          type: 'monthHelper',
+          icon: require('../assets/icon_helper.png'),
+          name: '个人计划编辑(辅助类)'
+        }, {
           type: 'today',
           icon: require('../assets/icon_table.png'),
-          name: '提交今日计划'
+          name: '提交计划'
         }, {
           type: 'score',
           icon: require('../assets/icon_score.png'),

@@ -36,25 +36,25 @@
         tableData: [{
           class: 1,
           name: '王金斌',
-          group: '生产类',
+          group: '辅助类',
           status: '已编辑'
         }, {
           
           class: 2,
           name: '朱金勇',
-          group: '生产类',
+          group: '辅助类',
           status: ''
         }, {
           
           class: 1,
           name: '张丽珍',
-          group: '生产类',
+          group: '辅助类',
           status: ''
         }, {
           
           class: 1,
           name: '吴鑫',
-          group: '生产类',
+          group: '辅助类',
           status: '已编辑'
         }]
       }

@@ -19,11 +19,15 @@
         adminFuns: [{
           type: 'adminToday',
           icon: require('../assets/icon_table.png'),
-          name: '查看今日计划'
+          name: '审批计划'
         }, {
           type: 'adminMonth',
           icon: require('../assets/icon_prod.png'),
-          name: '查看班组月计划'
+          name: '查看月计划(生产类)'
+        }, {
+          type: 'adminHelper',
+          icon: require('../assets/icon_prod.png'),
+          name: '查看月计划(辅助类)'
         }, {
           type: 'adminScore',
           icon: require('../assets/icon_score.png'),
@@ -36,6 +40,14 @@
           type: 'adminMonList',
           icon: require('../assets/icon_list.png'),
           name: '查看月计划完成情况'
+        }, {
+          type: 'adminMoney',
+          icon: require('../assets/icon_money.png'),
+          name: '绩效考核兑现'
+        }, {
+          type: 'adminAdjust',
+          icon: require('../assets/icon_money.png'),
+          name: '设备主人调整'
         }]
       }
     },

@@ -14,6 +14,11 @@ import AdminToday from './pages/adminToday.vue'
 import Submit from './pages/submit.vue'
 import MonList from './pages/monList.vue'
 import AdminMonList from './pages/adminMonList.vue'
+import AdminMoney from './pages/adminMoney.vue'
+import MonthHelper from './pages/monthHelper.vue'
+import AdminHelper from './pages/adminHelper.vue'
+import AdminAdjust from './pages/adminAdjust.vue'
+import AdminAdjustDetail from './pages/adminAdjustDetail.vue'
 
 Vue.use(VueRouter)
 const router = new VueRouter({
@@ -74,6 +79,26 @@ const router = new VueRouter({
     path: '/monList',
     name: 'monList',
     component: MonList,
+  }, {
+    path: '/adminMoney',
+    name: 'adminMoney',
+    component: AdminMoney
+  }, {
+    path: '/monthHelper',
+    name: 'monthHelper',
+    component: MonthHelper
+  }, {
+    path: '/adminHelper',
+    name: 'adminHelper',
+    component: AdminHelper
+  }, {
+    path: '/adminAdjust',
+    name: 'adminAdjust',
+    component: AdminAdjust
+  }, {
+    path: '/adminAdjustDetail',
+    name: 'adminAdjustDetail',
+    component: AdminAdjustDetail
   }, {
     path: '*',
     redirect: '/login',
