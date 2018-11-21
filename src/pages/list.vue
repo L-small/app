@@ -3,17 +3,17 @@
     <el-table :data="tableData" stripe style="width: 100%">
       <el-table-column prop="index" label="序号" width="35">
       </el-table-column>
-      <el-table-column prop="stationName" label="变电站名称" width="80">
+      <el-table-column prop="substationname" label="变电站名称" width="80">
       </el-table-column>
-      <el-table-column prop="equipName" label="设备名称" width="140">
+      <el-table-column prop="devicemanager" label="设备名称" width="140">
       </el-table-column>
-      <el-table-column prop="equipA" label="设备主人A角" width="65">
+      <el-table-column prop="aName" label="设备主人A角" width="65">
       </el-table-column>
-      <el-table-column prop="equipB" label="设备主人B角" width="65">
+      <el-table-column prop="bName" label="设备主人B角" width="65">
       </el-table-column>
-      <el-table-column prop="gourp" label="所在班组" width="80">
+      <el-table-column prop="class" label="所在班组" width="80">
       </el-table-column>
-      <el-table-column prop="content" label="设备范围">
+      <el-table-column prop="list" label="设备范围">
       </el-table-column>
     </el-table>
   </div>
@@ -25,29 +25,56 @@
 
 <script>
   export default {
-    name: 'login',
     data() {
       return {
-        tableData: [{
-          index: 1,
-          stationName: '35kV高家村变电站',
-          equipName: '35kV、10kV电压等级（区域）所有一、二次设备',
-          equipA: '陈娟',
-          equipB: '吴鑫',
-          gourp: '500kV三宝巡维中心',
-          content: '全站所有主变压器、站用变压器、断路器、隔离开关、电流互感器、电压互感器、避雷器、母线及相关二次保护、测控装置、直流系统，后台、五防相应电压等级部分'
-        }, {
-          index: 2,
-          stationName: '35kV上坡坡变电站',
-          equipName: '35kV、10kV电压等级（区域）所有一、二次设备',
-          equipA: '吴鑫',
-          equipB: '陈娟',
-          gourp: '500kV三宝巡维中心',
-          content: '全站所有主变压器、站用变压器、断路器、隔离开关、电流互感器、电压互感器、避雷器、母线及相关二次保护、测控装置、直流系统，后台、五防相应电压等级部分'
-        }]
+        tableData: [],
+        userInfo: {},
+        ajaxData: {}
       }
     },
-    methods: {},
+    created() {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      this.initData()
+    },
+    methods: {
+      handleData() {
+        for (let i = 0, len = this.ajaxData.length; i < len; i++) {
+          for (let j = i + 1; j < len; j++ ) {
+            if (this.ajaxData[i].id === this.ajaxData[j].id) {
+              this.ajaxData[i].aName = this.ajaxData[i].name
+              this.ajaxData[i].bName = this.ajaxData[j].name
+              this.tableData.push(this.ajaxData[i])
+            }
+          }
+        }
+      },
+      initData() {
+        let params
+        if (this.$route.query.type === 'user') {
+          params = {
+            id: this.userInfo.uid,
+            uid: 0
+          }
+        } else {
+          params = {
+            id: this.userInfo.uid,
+            uid: 1
+          }
+        }
+        this.$http.get('http://112.74.55.229:8090/bc/getdevice.xhtml', {params: params})
+        .then((res) => {
+          if (res.body.code === 200) {
+            this.ajaxData = JSON.parse(res.body.data)
+            this.handleData()
+          } else {
+            alert(res.msg)
+          }
+        })
+        .catch((err) => {
+          alert(err)
+        })
+      }
+    },
     components: {
   
     }

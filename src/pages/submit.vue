@@ -3,20 +3,20 @@
     <ul>
       <li class="name">
         <label class="label" for="">任务名：</label>
-        <p>检查变电站是否建立应有、现有图档清册</p>
+        <p>{{name}}</p>
       </li>
       <li>
         <label class="label" for="">描述：</label>
-        <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 10}" placeholder="请输入内容" v-model="textarea3">
+        <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 10}" placeholder="请输入内容" v-model="desc">
         </el-input>
       </li>
       <li>
-        <label class="label" for="">上传图片或附件：</label>
-        <el-upload action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
+        <label class="label">上传图片或附件：</label>
+        <el-upload action="" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
           <i class="el-icon-plus"></i>
         </el-upload>
         <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="">
+          <img width="100%" :src="imgUrl" alt="">
         </el-dialog>
       </li>
     </ul>
@@ -25,6 +25,67 @@
     </div>
   </div>
 </template>
+
+<script>
+  export default {
+    name: 'login',
+    data() {
+      return {
+        imgUrl: '',
+        dialogVisible: false,
+        desc: '',
+        id: '',
+        name: ''
+      }
+    },
+    created() {
+      this.id = this.$route.query.id
+      this.initData()
+    },
+    methods: {
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePictureCardPreview(file) {
+        this.imgUrl = file.url;
+        this.dialogVisible = true;
+      },
+      submit() {
+        let params = {
+          id: this.id,
+          desc: this.desc,
+          title: this.$route.query.title,
+          type: this.$route.query.type
+        }
+        this.$http.get('', {params: params})
+        .then((res) => {
+          if (res.code === 200) {
+            history.go(-1)
+          } else {
+            alert(res.msg)
+          }
+        })
+      },
+      initData() {
+        let params = {
+          id: ''
+        }
+        this.$http.get('', {params: params})
+        .then((res) => {
+          if (res.code === 200) {
+            this.name = res.data.name
+          }
+        })
+        .catch((err) => {
+          // console.log(err)
+        })
+      }
+    },
+    components: {
+  
+    }
+  }
+</script>
 
 <style scoped>
   ul {
@@ -60,33 +121,3 @@
     width: 200px;
   }
 </style>
-
-<script>
-  export default {
-    name: 'login',
-    data() {
-      return {
-        dialogImageUrl: '',
-        dialogVisible: false,
-        textarea3: ''
-      }
-    },
-    methods: {
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-      },
-      submit() {
-        alert('提交成功')
-        history.go(-2)
-      }
-    },
-    components: {
-  
-    }
-  }
-</script>
-

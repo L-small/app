@@ -17,11 +17,10 @@
       <el-form-item label="密码">
         <el-input class="item" v-model="form.password" type="password"></el-input>
       </el-form-item>
-      <el-form-item>
-        <el-button class="button">取消</el-button>
-        <el-button class="button" type="primary" @click="onSubmit">登录</el-button>
-      </el-form-item>
     </el-form>
+    <div class="footer">
+      <el-button class="button" type="primary" @click="submit">登录</el-button>
+    </div>
   </div>
 </template>
 
@@ -40,14 +39,18 @@
     width: 320px;
   }
 
-  .form .button {
-    width: 150px;
+  .footer {
+    width: 400px;
+    margin: 0 auto;
+  }
+
+  .footer .button {
+    width: 100%;
   }
 </style>
 
 <script>
   export default {
-    name: 'login',
     data() {
       return {
         form: {
@@ -64,35 +67,76 @@
         }],
         userNames: [{
           value: '田金周',
-          label: '田金周'
+          label: '田金周',
+          permission: 'admin'
         }, {
           value: '王金斌',
-          label: '王金斌'
+          label: '王金斌',
+          permission: 'admin'
         }, {
           value: '刘钢',
-          label: '刘钢'
+          label: '刘钢',
+          permission: 'user'
         }, {
           value: '孙琼仙',
-          label: '孙琼仙'
+          label: '孙琼仙',
+          permission: 'user'
         }, {
           value: '马锦波',
-          label: '马锦波'
+          label: '马锦波',
+          permission: 'admin'
         }, {
           value: '陈娟2',
-          label: '陈娟2'
+          label: '陈娟2',
+          permission: 'user'
         }, {
           value: '吴鑫',
-          label: '吴鑫'
-        }]
+          label: '吴鑫',
+          permission: 'user'
+        }],
+        userInfo: {}
       }
+    },
+    created() {
+      // this.getUserName()
     },
     methods: {
       onSubmit() {
-        if (this.form.userName === '田金周' || this.form.userName === '马锦波' || this.form.userName === '王金斌') {
-          this.$router.push({name: 'adminIndex'})
-        } else {
-          this.$router.push({name: 'index'})
+        let permission;
+        this.userNames.map((item) => {
+          if (item.value === this.form.userName) {
+            permission = item.permission
+          }
+        })
+        this.$router.push({name: 'index', query: {permission: permission}})
+      },
+      getUserName() {
+        this.$http.get('http://192.168.0.101:8080/bc/getuser.xhtml')
+        .then((res) => {
+          if (res.data.code === 200) {
+            // console.log(res.data)
+          }
+        })
+      },
+      submit() {
+        let params = {
+          name: this.form.userName,
+          password: this.form.password
         }
+        this.$http.get('http://192.168.0.101:8080/bc/loginuser.xhtml', {params: params})
+        .then((res) => {
+          if (res.body.code === 200) {
+            localStorage.setItem('userInfo', JSON.stringify(JSON.parse(res.body.data)[0]))
+            this.userInfo = JSON.parse(res.body.data)[0]
+            if (this.userInfo.uid === '1') {
+              this.$router.push({name: 'index', query: {permission: 'admin'}})
+            } else {
+              this.$router.push({name: 'index', query: {permission: 'user'}})
+            }
+          } else {
+            alert('登录失败')
+          }
+        })
       }
     },
     components: {

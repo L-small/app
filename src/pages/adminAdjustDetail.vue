@@ -2,26 +2,26 @@
   <div class="list">
     <p class="title">原设备信息</p>
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="stationName" label="变电站名称" width="80">
+      <el-table-column prop="substationname" label="变电站名称" width="80">
       </el-table-column>
-      <el-table-column prop="equipName" label="设备名称" width="140">
+      <el-table-column prop="devicemanager" label="设备名称" width="140">
       </el-table-column>
-      <el-table-column prop="equipA" label="设备主人A角" width="65">
+      <el-table-column prop="aName" label="设备主人A角" width="65">
       </el-table-column>
-      <el-table-column prop="equipB" label="设备主人B角" width="65">
+      <el-table-column prop="bName" label="设备主人B角" width="65">
       </el-table-column>
-      <el-table-column prop="gourp" label="所在班组" width="80">
+      <el-table-column prop="class" label="所在班组" width="80">
       </el-table-column>
-      <el-table-column prop="content" label="设备范围">
+      <el-table-column prop="list" label="设备范围">
       </el-table-column>
     </el-table>
     <p class="title">调整为</p>
-    <el-table :data="tableData2" stripe style="width: 100%">
-      <el-table-column prop="stationName" label="变电站名称" width="80">
+    <el-table :data="tableData" stripe style="width: 100%">
+      <el-table-column prop="substationname" label="变电站名称" width="80">
       </el-table-column>
-      <el-table-column prop="equipName" label="设备名称" width="140">
+      <el-table-column prop="devicemanager" label="设备名称" width="140">
       </el-table-column>
-      <el-table-column prop="equipA" label="设备主人A角" width="120">
+      <el-table-column label="设备主人A角" width="120">
         <template slot-scope="scope">
           <el-select class="item" v-model="userNameA" filterable placeholder="请选择">
             <el-option v-for="item in userNames" :key="item.value" :label="item.label" :value="item.value">
@@ -29,7 +29,7 @@
         </el-select>
         </template>
       </el-table-column>
-      <el-table-column prop="equipB" label="设备主人B角" width="120">
+      <el-table-column label="设备主人B角" width="120">
         <template slot-scope="scope">
           <el-select class="item" v-model="userNameB" filterable placeholder="请选择">
             <el-option v-for="item in userNames" :key="item.value" :label="item.label" :value="item.value">
@@ -37,9 +37,9 @@
         </el-select>
         </template>
       </el-table-column>
-      <el-table-column prop="gourp" label="所在班组" width="80">
+      <el-table-column prop="class" label="所在班组" width="80">
       </el-table-column>
-      <el-table-column prop="content" label="设备范围">
+      <el-table-column prop="list" label="设备范围">
       </el-table-column>
     </el-table>
     <div class="notify">
@@ -65,20 +65,7 @@
     name: 'login',
     data() {
       return {
-        tableData: [{
-          stationName: '500kV曲靖站',
-          equipName: '500kV第一、二串间隔、500kVⅠⅡ母线间隔；500kV#1、#2主变一次设备',
-          equipA: '李懋',
-          equipB: '高红',
-          gourp: '500kV三宝巡维中心',
-          content: '间隔所有断路器、隔离开关、电流互感器、电压互感器、高压电抗器、避雷器、阻波器、结合滤波器及500kV#1、#2主变本体'
-        }],
-        tableData2: [{
-          stationName: '500kV曲靖站',
-          equipName: '500kV第一、二串间隔、500kVⅠⅡ母线间隔；500kV#1、#2主变一次设备',
-          gourp: '500kV三宝巡维中心',
-          content: '间隔所有断路器、隔离开关、电流互感器、电压互感器、高压电抗器、避雷器、阻波器、结合滤波器及500kV#1、#2主变本体'
-        }],
+        tableData: [],
         userNameA: '',
         userNameB: '',
         userNames: [{
@@ -105,10 +92,32 @@
         }]
       }
     },
+    created() {
+      this.tableData.push(JSON.parse(this.$route.params.info))
+      console.log(this.tableData)
+    },
     methods: {
+      handleData() {
+
+      },
       change() {
-        alert('变更完成')
-        history.go(-1)
+        let firstFg = false
+        let secondFg = false
+        let firstParams = {
+          id: this.tableData[0].id,
+          role: 1,
+          userid: this.tableData[0].aId
+        }
+        const first = this.$http.get('http://112.74.55.229:8090/bc/changedevice.xhtml', {params: firstParams})
+        let secondParams = {
+          id: this.tableData[0].id,
+          role: 2,
+          userid: this.tableData[0].bId
+        }
+        const second = this.$http.get('http://112.74.55.229:8090/bc/changedevice.xhtml', {params: secondParams})
+        Promise.all([first, second]).then((res) => {
+          
+        })
       }
     },
     components: {
