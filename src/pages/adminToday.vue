@@ -112,8 +112,9 @@
       init() {
         let params = {
           id: this.userInfo.id
+          // month: new Date().getMonth() + 1
         }
-        this.$http.get('http://192.168.0.101:8080/bc/showpeopleplan.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)
@@ -190,7 +191,7 @@
           define: subItem.define,
           file: subItem.file
         }
-        this.$http.get('http://192.168.0.101:8080/bc/commitpeopleplan.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/commitpeopleplan.xhtml', {params: params})
         .then((res) => {
           if (res.code === 200) {
             if (item.list.length > 1) {

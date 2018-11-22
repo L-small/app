@@ -45,12 +45,25 @@
         for (let i = 0, len = this.ajaxData.length; i < len; i++) {
           for (let j = i + 1; j < len; j++ ) {
             if (this.ajaxData[i].id === this.ajaxData[j].id) {
-              this.ajaxData[i].aName = this.ajaxData[i].name
-              this.ajaxData[i].bName = this.ajaxData[j].name
-              this.ajaxData[i].aId = this.ajaxData[i].userid
-              this.ajaxData[i].bId = this.ajaxData[j].userid
+              if (this.ajaxData[i].role === 'a') {
+                this.ajaxData[i].aName = this.ajaxData[i].name
+                this.ajaxData[i].aId = this.ajaxData[i].userid
+              }
+              if (this.ajaxData[i].role === 'b') {
+                this.ajaxData[i].bName = this.ajaxData[i].name
+                this.ajaxData[i].bId = this.ajaxData[i].userid
+              }
+              if (this.ajaxData[j].role === 'a') {
+                this.ajaxData[i].aName = this.ajaxData[j].name
+                this.ajaxData[i].aId = this.ajaxData[j].userid
+              }
+              if (this.ajaxData[j].role === 'b') {
+                this.ajaxData[i].bName = this.ajaxData[j].name
+                this.ajaxData[i].bId = this.ajaxData[j].userid
+              }
               this.tableData.push(this.ajaxData[i])
             }
+            console.log(this.tableData)
           }
         }
       },
@@ -60,11 +73,12 @@
       getData() {
         let params = {
           id: this.userInfo.id,
-          uid: 0
+          uid: 1
         }
         this.$http.get('http://112.74.55.229:8090/bc/getdevice.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
+            // console.log(res.body.data)
             this.ajaxData = JSON.parse(res.body.data)
             this.handleData()
           } else {

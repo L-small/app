@@ -5,9 +5,9 @@
       </el-table-column>
       <el-table-column prop="name" label="姓名" width="80">
       </el-table-column>
-      <el-table-column label="个人30%绩效">
+      <el-table-column label="中心全部30%绩效金额总和">
         <template slot-scope="{row,$index}">
-          <el-input v-model="row.personal" @change="test(row)"></el-input>
+          <el-input v-model="row.personal"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="实际分配所得">

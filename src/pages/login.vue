@@ -111,7 +111,7 @@
         this.$router.push({name: 'index', query: {permission: permission}})
       },
       getUserName() {
-        this.$http.get('http://192.168.0.101:8080/bc/getuser.xhtml')
+        this.$http.get('http://112.74.55.229:8090/bc/getuser.xhtml')
         .then((res) => {
           if (res.data.code === 200) {
             // console.log(res.data)
@@ -123,7 +123,7 @@
           name: this.form.userName,
           password: this.form.password
         }
-        this.$http.get('http://192.168.0.101:8080/bc/loginuser.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/loginuser.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             localStorage.setItem('userInfo', JSON.stringify(JSON.parse(res.body.data)[0]))

@@ -91,7 +91,7 @@
           id: this.userInfo.id,
           password: this.form.password
         }
-        this.$http.get('http://192.168.0.101:8080/bc/passworduser.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/passworduser.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             alert('修改成功')

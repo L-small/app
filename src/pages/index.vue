@@ -60,7 +60,11 @@
         {
           type: 'historyMonth',
           icon: require('../assets/icon_history.png'),
-          name: '查看历史计划'
+          name: '查看月计划'
+        }, {
+          type: 'monScoreList',
+          icon: require('../assets/icon_monlist.png'),
+          name: '查看月度得分'
         }, {
           type: '',
           icon: require('../assets/icon_changeuser.png'),
@@ -103,7 +107,15 @@
         }, {
           type: 'adminScoreList',
           icon: require('../assets/icon_history.png'),
-          name: '查看历史绩效'
+          name: '查看绩效'
+        },  {
+          type: 'adminMonScore',
+          icon: require('../assets/icon_monscore.png'),
+          name: '设定月度得分'
+        }, {
+          type: 'monScoreList',
+          icon: require('../assets/icon_monlist.png'),
+          name: '查看月度得分'
         }, {
           type: 'adminAdjust',
           icon: require('../assets/icon_adjust.png'),

@@ -1,9 +1,9 @@
 <template>
   <div class="today">
-    <ul v-for="(item, index) in todayList" :key="index">
-      <li v-for="(subItem, index) in item.list" :key="index">
-        <p>{{subItem.name}}</p>
-        <el-button type="primary" @click="toSubmit(item, subItem)">去提交</el-button>
+    <ul>
+      <li v-for="(item, index) in todayList" :key="index">
+        <p>{{item.job}}</p>
+        <el-button type="primary" @click="toSubmit(item)">去提交</el-button>
       </li>
     </ul>
   </div>
@@ -15,41 +15,39 @@ export default {
   name: 'app',
   data() {
     return {
-      todayList: [{
-        title: '设备台账资料',
-        type: '基本要求',
-        list: [{
-          label: '检查变电站是否建立应有、现有图档清册'
-        }]
-      }, {
-        title: '设备台账资料',
-        type: '基本要求',
-        list: [{
-          label: '检查现有清册是否与应有清册一致'
-        }]
-      }, {
-        title: '设备台账资料',
-        type: '基本要求',
-        list: [{
-          label: '检查现场存放纸质图档是否和现有清册一致'
-        }]
-      }]
+      todayList: [],
+      userInfo: {},
+      ajaxData: {}
     }
   },
   created() {
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
     this.initData()
   },
   methods: {
-    toSubmit(item, subItem) {
-      this.$router.push({name: 'submit', query: {id: subItem.id, title: item.title, type: item.type}})
+    toSubmit(item) {
+      this.$router.push({name: 'submit', params: {info: JSON.stringify(item)}})
+    },
+    getMonth() {
+      const date = new Date()
+      const year = date.getFullYear()
+      const mon = date.getMonth() + 1
+      const day = date.getDay()
+      return `${yaer}-${mon}-${day}`
+    },
+    handleData() {
     },
     initData() {
-      this.$http.get('')
+      const params = {
+        id: this.userInfo.id
+      }
+      this.$http.get('http://112.74.55.229:8090/bc/showpeopleplantoday.xhtml', {params: params})
       .then((res) => {
-        if (res.code === 200) {
-          this.todayList = res.data
+        if (res.body.code === 200) {
+          this.todayList = JSON.parse(res.body.data)
+          // this.handleData()
         } else {
-          alert(res.msg)
+          // alert(res.body.msg)
         }
       })
       .catch((err) => {

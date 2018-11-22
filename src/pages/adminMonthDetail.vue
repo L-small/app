@@ -1,11 +1,16 @@
   <template>
     <div class="admin-mon-detail">
-      <ul class="container">
-        <li class="item" v-for="item in details">
-          <p>{{item.job}}</p>
-          <p>{{item.time}}</p>
-        </li>
-      </ul>
+      <el-table :data="details" stripe>
+        <el-table-column type="index" label="序号" width="80">
+        </el-table-column>
+        <el-table-column label="工作内容">
+          <template slot-scope="{row,$index}">
+            <p>{{row.job}}({{row.dimension}})</p>
+          </template>
+        </el-table-column>
+      <el-table-column prop="time" label="时间" width="100">
+      </el-table-column>
+    </el-table>
       <div class="footer">
         <el-button class="btn" @click="back">驳回</el-button>
         <el-button class="btn" type="success" @click="submit">同意</el-button>
@@ -17,7 +22,7 @@
     export default {
       data() {
         return {
-          details: {},
+          details: [],
           userInfo: ''
         }
       },
@@ -28,38 +33,75 @@
       },
       created() {
         this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+        this.planUser = this.$route.params.planUser
         this.getData()
       },
       methods: {
         getData() {
           let params = {
-            id: this.userInfo.id
+            id: this.planUser,
+            month: this.nextMonth()
           }
-          this.$http.get('http://192.168.0.101:8080/bc/showpeopleplan.xhtml', {params: params})
+          this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
           .then((res) => {
             if (res.body.code === 200) {
-              this.ajaxData = JSON.parse(res.body.data)
-              this.handelData()
+              console.log(res.body.data)
+              this.details = JSON.parse(res.body.data)
+              // this.handelData()
             }
           })
         },
-        submit() {
-          let params = {
-
+        nextMonth() {
+          let month = new Date().getMonth() + 1
+          if (month + 1 > 12) {
+            month = 1
+          } else {
+            month = month + 1
           }
-          this.$http.get('', {params: params})
-          .then((res) => {
-            if (res.code === 200) {
-              alert('审批完成')
-              history.go(-1)
+          return month
+        },
+        back() {
+
+        },
+        submit() {
+          let all = []
+          this.details.map((item) => {
+            let params = {
+              flag: 2,
+              month: this.nextMonth(),
+              time: new Date(item.time).getTime(),
+              userid: item.userid,
+              planid: item.planid,
+              define: '',
+              file: ''
+            }
+            let name = this.$http.get('http://112.74.55.229:8090/bc/commitpeopleplan.xhtml', {params: params})
+            all.push(name)
+          })
+          Promise.all(all).then((res) => {
+            let failFg = false
+            res.map((item) => {
+              if (item.body.code !== 200) {
+                failFg = true
+              }
+            })
+            if (res.length === 0) {
+              failFg = true
+            }
+            if (res.length !== all.length) {
+              failFg = true
+            }
+            if (failFg) {
+              alert('提交失败')
             } else {
-              alert(res.msg)
+              alert('提交成功')
+              history.go(-1)
             }
           })
-          .catch((err) => {
-            console.log(err)
+          .catch(() => {
+            alert('提交失败')
           })
-        }
+        },
       }
     }
   </script>
@@ -68,8 +110,6 @@
     .admin-mon-detail {
       padding: 15px;
       background: #fff;
-    }
-    .container {
     }
     .item {
       position: relative;

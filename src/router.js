@@ -6,22 +6,20 @@ import TodayList from './pages/todayList.vue'
 import List from './pages/list.vue'
 import Month from './pages/month.vue'
 import Score from './pages/score.vue'
-// import AdminIndex from './pages/adminIndex.vue'
 import AdminScore from './pages/adminScore.vue'
-// import AdminList from './pages/adminList.vue'
 import AdminMonth from './pages/adminMonth.vue'
 import AdminToday from './pages/adminToday.vue'
 import Submit from './pages/submit.vue'
-// import AdminMonList from './pages/adminMonList.vue'
 import AdminMoney from './pages/adminMoney.vue'
-// import AdminHelper from './pages/adminHelper.vue'
 import AdminAdjust from './pages/adminAdjust.vue'
 import AdminAdjustDetail from './pages/adminAdjustDetail.vue'
-// import EquipApply from './pages/equipApply.vue'
 import ChangePassword from './pages/changePassword.vue'
 import AdminScoreList from './pages/adminScoreList.vue'
 import AdminHistoryMon from './pages/adminHistoryMon.vue'
 import AdminMonDetail from './pages/adminMonthDetail.vue'
+import AdminMonScore from './pages/adminMonScore.vue'
+import MonScoreList from './pages/monScoreList.vue'
+import HistoryMonth from './pages/historyMon.vue'
 
 Vue.use(VueRouter)
 const router = new VueRouter({
@@ -123,6 +121,18 @@ const router = new VueRouter({
     path: '/adminMonDetail',
     name: 'adminMonDetail',
     component: AdminMonDetail
+  }, {
+    path: '/adminMonScore',
+    name: 'adminMonScore',
+    component: AdminMonScore
+  }, {
+    path: '/monScoreList',
+    name: 'monScoreList',
+    component: MonScoreList
+  }, {
+    path: '/historyMonth',
+    name: 'historyMonth',
+    component: HistoryMonth
   }, {
     path: '*',
     name: 'login',

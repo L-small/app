@@ -3,8 +3,8 @@
     <el-collapse v-model="activeNames">
       <el-collapse-item class="col" :title="`${item.title}`" :name="index" v-for="(item, index) in monList">
         <div class="item" v-for="subItem in item.list">
-          <p>（{{subItem.reuire | filterRequire}}）{{subItem.job}}</p>
-          <el-date-picker class="picker" v-model="subItem.time" type="date" placeholder="选择日期">
+          <p>（{{subItem.classify | filterRequire}}）{{subItem.job}}</p>
+          <el-date-picker class="picker" v-model="subItem.time" type="date" placeholder="选择日期" :picker-options="pickerOptions">
           </el-date-picker>
         </div>
       </el-collapse-item>
@@ -56,7 +56,14 @@
         submitData: [],
         ajaxData: [],
         titles: [],
-        userInfo: ''
+        userInfo: {},
+        pickerOptions: {
+          disabledDate(time) {
+            let date = new Date()
+            
+
+          }
+        }
       }
     },
     created() {
@@ -65,6 +72,7 @@
     },
     filters: {
       filterRequire(item) {
+        console.log(typeof item)
         if (item === '1') {
           return '基本要求'
         } else {
@@ -95,28 +103,32 @@
         const day = time.getDay()
         return `${year}-${month}-${day}`
       },
+      nextMonth() {
+        let month = new Date().getMonth() + 1
+        if (month + 1 > 12) {
+          month = 1
+        } else {
+          month = month + 1
+        }
+        return month
+      },
       submit() {
         let all = []
         this.monList.map((item) => {
           item.list.map((subItem, index) => {
-            let params = {
-              flag: 1,
-              time: new Date(subItem.time).getTime(),
-              userid: this.userInfo.id,
-              planid: subItem.id,
-              define: '',
-              file: ''
+            if (subItem.time) {
+              let params = {
+                flag: 1,
+                month: this.nextMonth(),
+                time: new Date(subItem.time).getTime(),
+                userid: this.userInfo.id,
+                planid: subItem.id,
+                define: '',
+                file: ''
+              }
+              let name = this.$http.get('http://112.74.55.229:8090/bc/commitpeopleplan.xhtml', {params: params})
+              all.push(name)
             }
-            var index = new Promise((resolve, reject) => {
-              this.$http.get('http://192.168.0.101:8080/bc/commitpeopleplan.xhtml', {params: params})
-              .then((res) => {
-                all.push(index)
-                resolve(res)
-              })
-              .catch(() => {
-                reject()
-              })
-            })
           })
         })
         Promise.all(all).then((res) => {
@@ -166,7 +178,7 @@
         })
       },
       init() {
-        this.$http.get('http://192.168.0.101:8080/bc/getplan.xhtml')
+        this.$http.get('http://112.74.55.229:8090/bc/getplan.xhtml')
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)

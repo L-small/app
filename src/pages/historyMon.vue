@@ -9,8 +9,19 @@
       </el-date-picker>
     </div>
     <div class="button">
-      <el-button class="btn" type="success" @click="getData">查询</el-button>
+      <el-button class="btn" type="success" @click="init">查询</el-button>
     </div>
+    <el-table :data="tableData" stripe>
+      <el-table-column type="index" label="序号" width="80">
+      </el-table-column>
+      <el-table-column label="工作内容">
+        <template slot-scope="{row,$index}">
+          <p>{{row.job}}({{row.dimension}})</p>
+        </template>
+      </el-table-column>
+      <el-table-column prop="time" label="时间" width="100">
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -19,36 +30,29 @@
     name: 'score',
     data() {
       return {
-        tableData: [{
-          name: '吴鑫',
-          score: 631,
-          detail: 354,
-          diff: 87
-        }],
+        tableData: [],
         time: '',
-        userInfo: {}
+        userInfo: {},
+        month: ''
       }
     },
     created() {
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-      this.getData()
+      this.time = `${new Date().getFullYear()}-${new Date().getMonth() + 1}`
+      this.init()
     },
     methods: {
-      getData() {
+      init() {
         let params = {
-          time: this.time,
-          user: this.userInfo
+          id: this.userInfo.id,
+          month: new Date(this.time).getMonth() + 2
         }
-        this.$http.get('', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
         .then((res) => {
-          if (res.code === 200) {
-            this.tableData = res.data
-          } else {
-            alert(res.msg)
+          if (res.body.code === 200) {
+            this.tableData = JSON.parse(res.body.data)
+            // this.handelData()
           }
-        })
-        .catch((err) => {
-          console.log(err)
         })
       }
     },

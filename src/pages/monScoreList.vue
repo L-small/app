@@ -14,11 +14,15 @@
     <el-table :data="tableData" stripe style="width: 100%">
       <el-table-column prop="name" label="姓名" width="80">
       </el-table-column>
-      <el-table-column prop="score" label="中心全部30%绩效金额总和">
+      <el-table-column prop="score" label="基础分">
       </el-table-column>
-      <el-table-column prop="detail" label="实际分配所得">
+      <el-table-column prop="detail" label="未完成工作扣分">
       </el-table-column>
-      <el-table-column prop="diff" label="差额">
+      <el-table-column prop="diff" label="月度调整加分">
+      </el-table-column>
+      <el-table-column prop="diff" label="月度实际得分">
+      </el-table-column>
+      <el-table-column prop="diff" label="未完成工作项数">
       </el-table-column>
     </el-table>
   </div>

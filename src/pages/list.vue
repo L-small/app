@@ -1,7 +1,7 @@
 <template>
   <div class="list">
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="index" label="序号" width="35">
+      <el-table-column type="index" label="序号" width="35">
       </el-table-column>
       <el-table-column prop="substationname" label="变电站名称" width="80">
       </el-table-column>
@@ -38,6 +38,7 @@
     },
     methods: {
       handleData() {
+        console.log(this.ajaxData)
         for (let i = 0, len = this.ajaxData.length; i < len; i++) {
           for (let j = i + 1; j < len; j++ ) {
             if (this.ajaxData[i].id === this.ajaxData[j].id) {
@@ -53,7 +54,7 @@
         if (this.$route.query.type === 'user') {
           params = {
             id: this.userInfo.uid,
-            uid: 0
+            uid: 2
           }
         } else {
           params = {
@@ -65,6 +66,7 @@
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)
+            console.log(res.body.data)
             this.handleData()
           } else {
             alert(res.msg)

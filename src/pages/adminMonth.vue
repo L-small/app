@@ -1,16 +1,19 @@
 <template>
   <div class="list">
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="class" label="班次">
+      <el-table-column prop="index" label="序号">
       </el-table-column>
       <el-table-column prop="name" label="姓名">
       </el-table-column>
       <el-table-column prop="status" label="计划编辑情况">
+        <template slot-scope="scope">
+          <p>{{scope.row.flag | filterFlag}}</p>
+        </template>
       </el-table-column>
       <el-table-column prop="option" label="操作">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.status === '未提交'" @click="notify">提醒</el-button>
-          <el-button v-if="scope.row.status === '已提交'" @click="toApproval(scope.row)">审批</el-button>
+          <el-button v-if="!scope.row.flag" @click="notify">提醒</el-button>
+          <el-button v-if="scope.row.flag === '1'" @click="toApproval(scope.row)">审批</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -32,30 +35,27 @@
     name: 'login',
     data() {
       return {
-        tableData: [{
-          class: 1,
-          name: '王金斌',
-          status: '未提交'
-        }, {
-          
-          class: 2,
-          name: '朱金勇',
-          status: '已提交'
-        }, {
-          
-          class: 1,
-          name: '张丽珍',
-          status: '已提交'
-        }, {
-          
-          class: 1,
-          name: '吴鑫',
-          status: '已通过'
-        }]
+        tableData: []
       }
     },
     created() {
       this.init();
+    },
+    filters: {
+      filterFlag(flag) {
+        switch(flag) {
+          case '3': 
+            return "已驳回"
+          case '2':
+            return "已通过"
+          case '1': 
+            return "已提交"
+          case '0':
+            return "未提交"
+          default: 
+            return "未提交"
+        }
+      }
     },
     methods: {
       notify(item) {
@@ -73,6 +73,15 @@
         .catch((err) => {
           console.log(err)
         })
+      },
+      nextMonth() {
+        let month = new Date().getMonth() + 1
+        if (month + 1 > 12) {
+          month = 1
+        } else {
+          month = month + 1
+        }
+        return month
       },
       notifyAll() {
         let array = []
@@ -97,16 +106,20 @@
         })
       },
       init() {
-        let url = ''
-        if (this.$route.query.type === 'prod') {
-          url = ''
-        } else {
-          url = ''
+        // let url = ''
+        // if (this.$route.query.type === 'prod') {
+        //   url = ''
+        // } else {
+        //   url = ''
+        // }
+        let params = {
+          month: this.nextMonth()
         }
-        this.$http.get(url)
+        this.$http.get('http://112.74.55.229:8090/bc/showpeopleallplan.xhtml', {params: params})
         .then((res) => {
-          if (res.code === 200) {
-            this.tableData = res.data
+          if (res.body.code === 200) {
+            console.log(JSON.parse(res.body.data))
+            this.tableData = JSON.parse(res.body.data)
           }
         })
         .catch((err) => {
@@ -114,7 +127,7 @@
         })
       },
       toApproval(item) {
-        this.$router.push({name: 'adminMonDetail', query: {userId: item.name}})
+        this.$router.push({name: 'adminMonDetail', params: {planUser: item.userid}})
       }
     },
     components: {

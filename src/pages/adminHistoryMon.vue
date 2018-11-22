@@ -9,26 +9,22 @@
           placeholder="选择月">
         </el-date-picker>
       </div>
-      <div class="item">
-        <p>分类：</p>
-        <el-select v-model="type" placeholder="请选择">
-          <el-option
-            v-for="item in types"
-            :label="item"
-            :value="item">
-          </el-option>
-        </el-select>
-      </div>
     </div>
     <div class="button">
       <el-button class="btn" type="success" @click="getData">查询</el-button>
     </div>
-    <el-collapse v-model="activeNames" v-for="item in tableData">
-      <el-collapse-item v-for="(subItem, index) in item.list" class="col" :title="item.name + '的月计划'" :name="index">
-        <div class="item">
-          <p class="name">{{subItem.name}}</p>
-          <p class="success" :class="{'success': subItem.status === 'success', 'fail': subItem.status === 'fail'}">{{subItem.status}}</p>
-        </div>
+    <el-collapse v-model="activeNames" @change="changeColl" accordion>
+      <el-collapse-item v-for="(item, index) in userList" class="col" :title="item.name + '的月计划'" :name="index">
+        <el-table :data="tableData">
+          <el-table-column type="index" label="序号" width="80">
+          </el-table-column>
+          <el-table-column label="工作内容">
+            <template slot-scope="{row,$index}">
+              <p>{{row.job}}({{row.dimension}})</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="time" label="时间" width="100"></el-table-column>
+        </el-table>
       </el-collapse-item>
     </el-collapse>
   </div>
@@ -43,17 +39,12 @@
         time: '',
         types: ['生产类', '辅助类'],
         type: '',
-        tableData: [{
-          name: '王金斌',
-          list: [{
-            name: '设备生产资料',
-            status: 'success'
-          }]
-        }]
+        userList: [],
+        tableData: []
       }
     },
     created() {
-      this.getData();
+      this.init();
     },
     methods: {
       notify(item) {
@@ -66,6 +57,35 @@
             alert('已通知所有未完成人员')
           } else {
             alert('请重试')
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      },
+      changeColl(item) {
+        console.log(item)
+        if (item !== '') {
+          this.getData(this.userList[item].id)
+        }
+      },
+      nextMonth() {
+        let month = new Date().getMonth() + 1
+        if (month + 1 > 12) {
+          month = 1
+        } else {
+          month = month + 1
+        }
+        return month
+      },
+      init() {
+        let params = {
+          month: this.nextMonth()
+        }
+        this.$http.get('http://112.74.55.229:8090/bc/showpeopleallplan.xhtml', {params: params})
+        .then((res) => {
+          if (res.body.code === 200) {
+            this.userList = JSON.parse(res.body.data)
           }
         })
         .catch((err) => {
@@ -94,20 +114,20 @@
           console.log(err)
         })
       },
-      getData() {
-        let params = {
-          time: '',
-          type: ''
-        }
-        this.$http.get(url, {params: params})
-        .then((res) => {
-          if (res.code === 200) {
-            this.tableData = res.data
+      getData(id) {
+        if (id) {
+          let params = {
+            id: id,
+            month: this.nextMonth()
           }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+          this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
+          .then((res) => {
+            if (res.body.code === 200) {
+              this.tableData = JSON.parse(res.body.data)
+              // this.handelData()
+            }
+          })
+        }
       }
     },
     components: {

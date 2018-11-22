@@ -69,7 +69,7 @@
         userNameA: '',
         userNameB: '',
         userNames: [{
-          value: '田金周',
+          value: '1',
           label: '田金周'
         }, {
           value: '王金斌',
@@ -87,7 +87,7 @@
           value: '陈娟2',
           label: '陈娟2'
         }, {
-          value: '吴鑫',
+          value: '2',
           label: '吴鑫'
         }]
       }
@@ -105,18 +105,29 @@
         let secondFg = false
         let firstParams = {
           id: this.tableData[0].id,
-          role: 1,
-          userid: this.tableData[0].aId
+          role: 'a',
+          userid: this.userNameA
         }
         const first = this.$http.get('http://112.74.55.229:8090/bc/changedevice.xhtml', {params: firstParams})
         let secondParams = {
           id: this.tableData[0].id,
-          role: 2,
-          userid: this.tableData[0].bId
+          role: 'b',
+          userid: this.userNameB
         }
         const second = this.$http.get('http://112.74.55.229:8090/bc/changedevice.xhtml', {params: secondParams})
         Promise.all([first, second]).then((res) => {
-          
+          let alertFg = false
+          res.map((item) => {
+            if (item.body.code !== 200) {
+              alertFg = true
+            }
+          })
+          if (alertFg) {
+            alert('修改失败')
+          } else {
+            alert('修改成功')
+            history.go(-1)
+          }
         })
       }
     },
