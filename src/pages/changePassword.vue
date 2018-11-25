@@ -12,7 +12,7 @@
       </el-form-item>
       <el-form-item>
         <!-- <el-button class="button">取消</el-button> -->
-        <el-button class="button" type="primary" @click="submit">确认</el-button>
+        <el-button class="button" @click="submit">确认</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -35,6 +35,8 @@
 
   .form .button {
     width: 150px;
+    color: #fff;
+    background: #50a095;
   }
 </style>
 
@@ -91,7 +93,7 @@
           id: this.userInfo.id,
           password: this.form.password
         }
-        this.$http.get('http://112.74.55.229:8090/bc/passworduser.xhtml', {params: params})
+        this.$http.get('http://192.168.0.100:8080/bc/passworduser.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             alert('修改成功')

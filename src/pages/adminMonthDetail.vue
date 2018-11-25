@@ -12,8 +12,8 @@
       </el-table-column>
     </el-table>
       <div class="footer">
-        <el-button class="btn" @click="back">驳回</el-button>
-        <el-button class="btn" type="success" @click="submit">同意</el-button>
+        <el-button class="btn" @click="submit(3)">驳回</el-button>
+        <el-button class="btn" type="success" @click="submit(2)">同意</el-button>
       </div>
     </div>
   </template>
@@ -42,10 +42,9 @@
             id: this.planUser,
             month: this.nextMonth()
           }
-          this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
+          this.$http.get('http://192.168.0.100:8080/bc/showpeopleplan.xhtml', {params: params})
           .then((res) => {
             if (res.body.code === 200) {
-              console.log(res.body.data)
               this.details = JSON.parse(res.body.data)
               // this.handelData()
             }
@@ -60,14 +59,11 @@
           }
           return month
         },
-        back() {
-
-        },
-        submit() {
+        submit(flag) {
           let all = []
           this.details.map((item) => {
             let params = {
-              flag: 2,
+              flag: flag,
               month: this.nextMonth(),
               time: new Date(item.time).getTime(),
               userid: item.userid,
@@ -75,7 +71,7 @@
               define: '',
               file: ''
             }
-            let name = this.$http.get('http://112.74.55.229:8090/bc/commitpeopleplan.xhtml', {params: params})
+            let name = this.$http.get('http://192.168.0.100:8080/bc/commitpeopleplan.xhtml', {params: params})
             all.push(name)
           })
           Promise.all(all).then((res) => {

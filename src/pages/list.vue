@@ -5,7 +5,7 @@
       </el-table-column>
       <el-table-column prop="substationname" label="变电站名称" width="80">
       </el-table-column>
-      <el-table-column prop="devicemanager" label="设备名称" width="140">
+      <el-table-column prop="devicemanager" label="设备名称" width="100">
       </el-table-column>
       <el-table-column prop="aName" label="设备主人A角" width="65">
       </el-table-column>
@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column prop="class" label="所在班组" width="80">
       </el-table-column>
-      <el-table-column prop="list" label="设备范围">
+      <el-table-column prop="explain" label="设备范围">
       </el-table-column>
     </el-table>
   </div>
@@ -37,8 +37,8 @@
       this.initData()
     },
     methods: {
+      // TODO 添加班组
       handleData() {
-        console.log(this.ajaxData)
         for (let i = 0, len = this.ajaxData.length; i < len; i++) {
           for (let j = i + 1; j < len; j++ ) {
             if (this.ajaxData[i].id === this.ajaxData[j].id) {
@@ -62,11 +62,10 @@
             uid: 1
           }
         }
-        this.$http.get('http://112.74.55.229:8090/bc/getdevice.xhtml', {params: params})
+        this.$http.get('http://192.168.0.100:8080/bc/getdevice.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)
-            console.log(res.body.data)
             this.handleData()
           } else {
             alert(res.msg)

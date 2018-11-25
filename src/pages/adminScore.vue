@@ -1,28 +1,27 @@
 <template>
   <div class="score">
+    <div class="money">
+      <p class="title">中心全部30%绩效金额总和</p>
+      <el-input placeholder="请输入绩效金额总和" class="money-input" v-model="allMoney"></el-input>
+    </div>
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="index" label="序号" width="50">
+      <el-table-column type="index" label="序号" width="80">
       </el-table-column>
-      <el-table-column prop="name" label="姓名" width="80">
+      <el-table-column prop="name" label="姓名" width="120">
       </el-table-column>
       <el-table-column label="中心全部30%绩效金额总和">
         <template slot-scope="{row,$index}">
-          <el-input v-model="row.personal"></el-input>
+          <p>{{allMoney}}</p>
         </template>
       </el-table-column>
-      <el-table-column label="实际分配所得">
-        <template slot-scope="{row,$index}">
-          <el-input v-model="row.real"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column label="差额">
+      <!-- <el-table-column label="差额">
         <template slot-scope="{row,$index}">
           <el-input v-model="row.diff"></el-input>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <div class="footer">
-      <el-button class="btn" type="success" @click="submit">确认</el-button>
+      <el-button class="btn" @click="submit">确认</el-button>
     </div>
   </div>
 </template>
@@ -32,78 +31,72 @@
     name: 'index',
     data() {
       return {
-        tableData: [{
-          index: 1,
-          name: '朱金勇',
-          personal: '',
-          real: '',
-          diff: ''
-        }, {
-          index: 2,
-          name: '王金斌',
-          personal: '',
-          real: '',
-          diff: ''
-        }, {
-          index: 3,
-          name: '马锦波',
-          personal: '',
-          real: '',
-          diff: ''
-        }, {
-          index: 4,
-          name: '高红',
-          personal: '',
-          real: '',
-          diff: ''
-        }, {
-          index: 5,
-          name: '代红丽',
-          personal: '',
-          real: '',
-          diff: ''
-        }, {
-          index: 6,
-          name: '吴鑫',
-          personal: '',
-          real: '',
-          diff: ''
-        }]
+        tableData: [],
+        allMoney: '',
+        userInfo: '',
+        ajaxData: []
       }
     },
     created() {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.getData()
     },
     methods: {
       submit() {
-        console.log(this.tableData)
-        let params = {
-          uid: '',
-          info: JSON.stringify(this.tableData)
-        }
-        this.$http.get('', {params: params})
-        .then((res) => {
-          if (res.code === 200) {
-            alert('设定绩效成功')
-            history.go(-1)
+        const list = []
+        this.tableData.map((item, index) => {
+          let params = {
+            month: new Date().getMonth() + 1,
+            id: item.id,
+            score30: this.allMoney
+          }
+          let name = this.$http.get('http://192.168.0.100:8080/bc/adduserget.xhtml', {params: params})
+          list.push(name)
+        })
+        Promise.all(list).then((res) => {
+          let failFg = false
+          res.map((item) => {
+            if (item.body.code !== 200) {
+              failFg = true
+            }
+          })
+          if (res.length === 0) {
+            failFg = true
+          }
+          if (res.length !== list.length) {
+            failFg = true
+          }
+          if (failFg) {
+            alert('提交失败')
           } else {
-            alert(res.msg)
+            alert('提交成功')
+            history.go(-1)
           }
         })
         .catch((err) => {
-          console.log(err)
+          alert('提交失败')
         })
       },
+      handleData() {
+        const list = []
+        this.ajaxData.map((item) => {
+          list.push({
+            id: item.id,
+            name: item.name,
+            score30: this.allMoney
+          })
+        })
+        this.tableData = list
+        console.log(this.tableData)
+      },
       getData() {
-        let params = {
-          uid: ''
-        }
-        this.$http.get('', {params: params})
+        this.$http.get('http://192.168.0.100:8080/bc/getalluser.xhtml')
         .then((res) => {
-          if (res.code === 200) {
-            this.tableData = res.data
+          if (res.body.code === 200) {
+            this.ajaxData = JSON.parse(res.body.data)
+            this.handleData()
           } else {
-            alert(res.msg)
+            alert(res.body.msg)
           }
         })
         .catch((err) => {
@@ -118,6 +111,21 @@
 </script>
 
 <style scoped>
+  .money {
+    width: 75%;
+    margin: 20px auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .title {
+    font-size: 14px;
+    color: #333;
+    margin-right: 10px;
+  }
+  .money-input {
+    width: 220px;
+  }
   .footer {
     position: fixed;
     bottom: 0;
@@ -131,5 +139,7 @@
   
   .footer .btn {
     width: 300px;
+    color: #fff;
+    background: #50a095;
   }
 </style>

@@ -2,7 +2,7 @@
   <div class="index">
     <div>
       <el-row :gutter="20">
-        <el-col :span="6" v-for="(item, index) in userFuns">
+        <el-col :span="6" v-for="(item, index) in adminFuns">
           <div class="item icon" @click="toFun(item)">
             <img :src="item.icon" alt="">
             <p>{{item.name}}</p>
@@ -17,62 +17,61 @@
   export default {
     data() {
       return {
-        userFuns: [{
-          type: 'month',
+        adminFuns: [{
+          type: 'adminToday',
+          icon: require('../assets/icon_approval.png'),
+          name: '审批计划'
+        }, {
+          type: 'adminMonth',
           icon: require('../assets/icon_prod.png'),
-          name: '个人计划编辑(生产类)'
+          name: '审批月计划(生产类)'
         }, {
-          type: 'assistMonth',
+          type: 'adminAssistMonth',
           icon: require('../assets/icon_helper.png'),
-          name: '个人计划编辑(辅助类)'
+          name: '审批月计划(辅助类)'
         }, {
-          type: 'todayList',
-          icon: require('../assets/icon_plan.png'),
-          name: '提交计划'
-        }, {
-          type: 'score',
+          type: 'adminScore',
           icon: require('../assets/icon_score.png'),
-          name: '查看绩效'
+          name: '设定绩效'
         }, {
-          type: 'list',
-          query: 'user',
-          icon: require('../assets/icon_device.png'),
-          name: '管辖设备'
-        }, 
-        // {
-        //   type: 'equipApply',
-        //   icon: require('../assets/icon_list.png'),
-        //   name: '设备主人调整申请'
-        // }, 
-        {
-          type: 'historyMonth',
+          type: 'adminScoreList',
           icon: require('../assets/icon_history.png'),
-          name: '查看月计划'
+          name: '查看绩效'
+        },  {
+          type: 'adminMonScore',
+          icon: require('../assets/icon_monscore.png'),
+          name: '设定月度得分'
         }, {
-          type: 'monScoreList',
+          type: 'adminMonScoreList',
           icon: require('../assets/icon_monlist.png'),
           name: '查看月度得分'
         }, {
-          type: 'changePassword',
+          type: 'adminAdjust',
+          icon: require('../assets/icon_adjust.png'),
+          name: '设备主人调整'
+        }, {
+          type: 'list',
+          query: 'admin',
+          icon: require('../assets/icon_device.png'),
+          name: '设备主人清单'
+        }, {
+          type: 'adminHistoryMon',
+          icon: require('../assets/icon_list.png'),
+          name: '查看月计划'
+        }, {
+          type: 'adminResetPassword',
           icon: require('../assets/icon_password.png'),
-          name: '修改密码'
+          name: '重置用户密码'
         }, {
           type: '',
           icon: require('../assets/icon_changeuser.png'),
           name: '退出'
-        } 
-        // {
-        //   type: 'delay',
-        //   icon: require('../assets/icon_delay.png'),
-        //   name: '滞后计划'
-        // }
-        ],
+        }],
         userInfo: {}
       }
     },
     created() {
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-      this.diffPlan()
     },
     methods: {
       toFun(item) {
@@ -83,12 +82,25 @@
           this.$router.push({name: 'login'})
         }
       },
-      diffPlan() {
-        if (this.userInfo.classify === '1') {
-          this.userFuns.splice(1,1)
-        } else {
-          this.userFuns.splice(0,1)
+      getToday() {
+        const params = {
+          id: this.userInfo.id
         }
+        this.$http.get('http://192.168.0.100:8080/bc/showpeopleplantoday.xhtml', {params: params})
+        .then((res) => {
+          if (res.body.code === 200) {
+            if (res.body.data.length !== 0) {
+              
+            }
+            this.todayList = JSON.parse(res.body.data)
+          } else {
+            this.successFg = false
+            alert(res.body.msg)
+          }
+        })
+        .catch((err) => {
+          alert(err)
+        })
       }
     },
     components: {

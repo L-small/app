@@ -50,12 +50,13 @@
         this.month = time.getMonth() + 1
       },
       getData() {
+        this.tableData = []
         this.filterMon()
         let params = {
           month: this.month,
           id: this.userInfo.id
         }
-        this.$http.get('http://192.168.0.100:8080/bc/getuseraddvalue.xhtml', {params: params})
+        this.$http.get('http://192.168.0.100:8080/bc/getalluseraddvalue.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             this.tableData = JSON.parse(res.body.data)

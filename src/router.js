@@ -20,6 +20,11 @@ import AdminMonDetail from './pages/adminMonthDetail.vue'
 import AdminMonScore from './pages/adminMonScore.vue'
 import MonScoreList from './pages/monScoreList.vue'
 import HistoryMonth from './pages/historyMon.vue'
+import AssistMonth from './pages/assistMonth.vue'
+import AdminIndex from './pages/adminIndex.vue'
+import AdminAssistMonth from './pages/adminAssistMonth.vue'
+import AdminMonScoreList from './pages/adminMonScoreList.vue'
+import AdminResetPassword from './pages/adminResetPassword.vue'
 
 Vue.use(VueRouter)
 const router = new VueRouter({
@@ -133,6 +138,26 @@ const router = new VueRouter({
     path: '/historyMonth',
     name: 'historyMonth',
     component: HistoryMonth
+  }, {
+    path: '/assistMonth',
+    name: 'assistMonth',
+    component: AssistMonth
+  }, {
+    path: '/adminIndex',
+    name: 'adminIndex',
+    component: AdminIndex
+  }, {
+    path: '/adminAssistMonth',
+    name: 'adminAssistMonth',
+    component: AdminAssistMonth
+  }, {
+    path: '/adminMonScoreList',
+    name: 'adminMonScoreList',
+    component: AdminMonScoreList
+  }, {
+    path: '/adminResetPassword',
+    name: 'adminResetPassword',
+    component: AdminResetPassword
   }, {
     path: '*',
     name: 'login',

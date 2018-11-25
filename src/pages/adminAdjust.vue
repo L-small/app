@@ -1,17 +1,17 @@
 <template>
   <div class="list">
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="index" label="序号" width="35">
+      <el-table-column type="index" label="序号" width="35">
       </el-table-column>
-      <el-table-column prop="substationname" label="变电站名称" width="80">
+      <el-table-column prop="substationname" label="变电站名称" width="70">
       </el-table-column>
-      <el-table-column prop="devicemanager" label="设备名称" width="140">
+      <el-table-column prop="devicemanager" label="设备名称" width="120">
       </el-table-column>
       <el-table-column prop="aName" label="设备主人A角" width="65">
       </el-table-column>
       <el-table-column prop="bName" label="设备主人B角" width="65">
       </el-table-column>
-      <el-table-column prop="list" label="设备范围">
+      <el-table-column prop="explain" label="设备范围">
       </el-table-column>
       <el-table-column prop="option" label="操作" width="80">
         <template slot-scope="scope">
@@ -21,10 +21,6 @@
     </el-table>
   </div>
 </template>
-
-<style scoped>
-  
-</style>
 
 <script>
   export default {
@@ -63,7 +59,6 @@
               }
               this.tableData.push(this.ajaxData[i])
             }
-            console.log(this.tableData)
           }
         }
       },
@@ -75,10 +70,9 @@
           id: this.userInfo.id,
           uid: 1
         }
-        this.$http.get('http://112.74.55.229:8090/bc/getdevice.xhtml', {params: params})
+        this.$http.get('http://192.168.0.100:8080/bc/getdevice.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
-            // console.log(res.body.data)
             this.ajaxData = JSON.parse(res.body.data)
             this.handleData()
           } else {

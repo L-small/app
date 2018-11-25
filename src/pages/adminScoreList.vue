@@ -1,7 +1,7 @@
 <template>
   <div class="score">
     <div class="condition">
-      <p>选择日期：</p>
+      <p class="title">选择日期：</p>
       <el-date-picker
         v-model="time"
         type="month"
@@ -9,18 +9,19 @@
       </el-date-picker>
     </div>
     <div class="button">
-      <el-button class="btn" type="success" @click="getData">查询</el-button>
+      <el-button class="btn" @click="getData">查询</el-button>
     </div>
     <el-table :data="tableData" stripe style="width: 100%">
       <el-table-column type="index" width="50">
     </el-table-column>
       <el-table-column prop="name" label="姓名" width="80">
       </el-table-column>
-      <el-table-column prop="personal" label="中心全部30%绩效金额总和">
+      <el-table-column prop="30score" label="中心全部30%绩效金额总和">
       </el-table-column>
-      <el-table-column prop="detail" label="实际分配所得">
-      </el-table-column>
-      <el-table-column prop="diff" label="差额">
+      <el-table-column prop="actual" label="实际分配所得">
+        <template slot-scope="{row,$index}">
+          <p>{{parseFloat(row.actual).toFixed(2)}}</p>
+        </template>
       </el-table-column>
     </el-table>
   </div>
@@ -32,64 +33,39 @@
     data() {
       return {
         time: '',
-        tableData: [{
-          index: 1,
-          name: '朱金勇',
-          personal: '',
-          real: '',
-          diff: ''
-        }, {
-          index: 2,
-          name: '王金斌',
-          personal: '',
-          real: '',
-          diff: ''
-        }, {
-          index: 3,
-          name: '马锦波',
-          personal: '',
-          real: '',
-          diff: ''
-        }, {
-          index: 4,
-          name: '高红',
-          personal: '',
-          real: '',
-          diff: ''
-        }, {
-          index: 5,
-          name: '代红丽',
-          personal: '',
-          real: '',
-          diff: ''
-        }, {
-          index: 6,
-          name: '吴鑫',
-          personal: '',
-          real: '',
-          diff: ''
-        }]
+        tableData: [],
+        userInfo: '',
+        time: '',
+        month: ''
       }
     },
     created() {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      this.time = `${new Date().getFullYear()}-${new Date().getMonth() + 1}`
       this.getData()
     },
     methods: {
+      handleTime() {
+        const date = new Date(this.time)
+        this.month = date.getMonth() + 1
+      },
       getData() {
+        this.tableData = []
+        this.handleTime()
         let params = {
-          uid: '',
-          time: this.time
+          id: this.userInfo.id,
+          month: this.month
         }
-        this.$http.get('', {params: params})
+        this.$http.get('http://192.168.0.100:8080/bc/getalluserget.xhtml', {params: params})
         .then((res) => {
-          if (res.code === 200) {
-            this.tableData = res.data
+          if (res.body.code === 200) {
+            this.tableData = JSON.parse(res.body.data)
           } else {
-            alert(res.msg)
+            alert(res.body.msg)
           }
         })
         .catch((err) => {
-          console.log(err)
+          alert("查询失败")
         })
       }
     },
@@ -100,6 +76,10 @@
 </script>
 
 <style scoped>
+  .title {
+    color: #333;
+    font-size: 14px;
+  }
   .footer {
     position: fixed;
     bottom: 0;
@@ -116,6 +96,7 @@
   }
 
   .condition {
+    padding-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -126,5 +107,7 @@
   }
   .button .btn {
     width: 200px;
+    color: #fff;
+    background: #50a095;
   }
 </style>

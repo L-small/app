@@ -12,7 +12,7 @@
       </el-table-column>
       <el-table-column prop="option" label="操作">
         <template slot-scope="scope">
-          <!-- <el-button v-if="!scope.row.flag" @click="notify(scope.row)">提醒</el-button> -->
+          <!-- <el-button v-if="!scope.row.flag" @click="notify">提醒</el-button> -->
           <el-button v-if="scope.row.flag === '1'" @click="toApproval(scope.row)">审批</el-button>
         </template>
       </el-table-column>
@@ -75,23 +75,18 @@
     methods: {
       notify(item) {
         let params = {
-          flag: 5,
-          month: new Date().getMonth() + 1,
-          time: 0,
-          userid: item.userid,
-          planid: item.id,
-          define: '',
-          file: ''
+          list: [item.id]
         }
-        console.log(params)
-        this.$http.get('http://192.168.0.100:8080/bc/commitpeopleplan.xhtml', {params: params})
+        this.$http.get('', {params: params})
         .then((res) => {
-          if (res.body.code === 200) {
-            if (item.list.length > 1) {
-              this.remove(item.list, subIndex)
-            }
-            alert('成功');
+          if (res.code === 200) {
+            alert('已通知所有未完成人员')
+          } else {
+            alert('请重试')
           }
+        })
+        .catch((err) => {
+          console.log(err)
         })
       },
       nextMonth() {
@@ -103,57 +98,36 @@
         }
         return month
       },
+      notifyAll() {
+        let array = []
+        this.tableData.map((item) => {
+          if (item.status) {
+            array.push(item.id)
+          }
+        })
+        let params = {
+          list: array
+        }
+        this.$http.get('', {params: params})
+        .then((res) => {
+          if (res.code === 200) {
+            alert('已通知所有未完成人员')
+          } else {
+            alert('请重试')
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      },
       handleData() {
         const list = []
         this.ajaxData.map((item) => {
-          if (item.classify === '1') {
+          if (item.classify === '2') {
             list.push(item)
           }
         })
         this.tableData = list
-      },
-      notifyAll() {
-        let all = []
-        this.monList.map((item) => {
-          item.list.map((subItem, index) => {
-            if (subItem.time) {
-              let params = {
-                flag: 1,
-                month: this.nextMonth(),
-                time: new Date(subItem.time).getTime(),
-                userid: this.userInfo.id,
-                planid: subItem.id,
-                define: '',
-                file: ''
-              }
-              let name = this.$http.get('http://192.168.0.100:8080/bc/commitpeopleplan.xhtml', {params: params})
-              all.push(name)
-            }
-          })
-        })
-        Promise.all(all).then((res) => {
-          let failFg = false
-          res.map((item) => {
-            if (item.body.code !== 200) {
-              failFg = true
-            }
-          })
-          if (res.length === 0) {
-            failFg = true
-          }
-          if (res.length !== all.length) {
-            failFg = true
-          }
-          if (failFg) {
-            alert('提交失败')
-          } else {
-            alert('提交成功')
-            history.go(-1)
-          }
-        })
-        .catch(() => {
-          alert('提交失败')
-        })
       },
       init() {
         let params = {

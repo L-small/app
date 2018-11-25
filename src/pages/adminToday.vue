@@ -30,8 +30,8 @@
             </div>
           </div>
           <div class="option">
-            <el-button @click="submit(item, index, subItem, subIndex, 'off')">驳回</el-button>
-            <el-button type="success" @click="submit(item, index, subItem, subIndex, 'ok')">确认完成</el-button>
+            <el-button @click="submit(item, index, subItem, subIndex, 8)">驳回</el-button>
+            <el-button type="success" @click="submit(item, index, subItem, subIndex, 7)">确认完成</el-button>
           </div>
         </div>
       </el-collapse-item>
@@ -54,7 +54,7 @@
   line-height: 45px;
   font-size: 14px;
   color: #fff;
-  background: #409EFF;
+  background: #50a095;
 }
 .item {
   padding: 20px;
@@ -109,17 +109,25 @@
       this.init()
     },
     methods: {
-      init() {
-        let params = {
-          id: this.userInfo.id
-          // month: new Date().getMonth() + 1
+      nextMonth() {
+        let month = new Date().getMonth() + 1
+        if (month + 1 > 12) {
+          month = 1
+        } else {
+          month = month + 1
         }
-        this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
+        return month
+      },
+      init() {
+        this.$http.get('http://192.168.0.100:8080/bc/showpeopleplanalltoday.xhtml')
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)
             this.handelData()
           }
+        })
+        .catch((err) => {
+          console.log(err)
         })
       },
       handelData() {
@@ -130,10 +138,10 @@
             prodString = '',
             assistString = ''
         this.ajaxData.map((item) => {
-          if (item.classify === '1' && item.flag === 1) {
+          if (item.classify === '1') {
             prodData.push(item)
           } 
-          if (item.classify !== '1' && item.flag === 1) {
+          if (item.classify !== '1') {
             assistData.push(item)
           }
         })
@@ -177,28 +185,32 @@
         })
       },
       handleChange() {
-        // console.log(val);
       },
       remove(arr, val) {
         arr.splice(index, 1);
       },
       submit(item, index, subItem, subIndex, status) {
         let params = {
-          flag: 3,
+          flag: status,
+          month: new Date().getMonth() + 1,
           time: new Date(subItem.time).getTime(),
-          userid: this.userInfo.id,
+          userid: subItem.userid,
           planid: subItem.id,
           define: subItem.define,
           file: subItem.file
         }
-        this.$http.get('http://112.74.55.229:8090/bc/commitpeopleplan.xhtml', {params: params})
+        this.$http.get('http://192.168.0.100:8080/bc/commitpeopleplan.xhtml', {params: params})
         .then((res) => {
-          if (res.code === 200) {
+          if (res.body.code === 200) {
             if (item.list.length > 1) {
               this.remove(item.list, subIndex)
             }
             alert('成功');
           }
+        })
+        .catch((err) => {
+          console.log(err)
+          alert("失败")
         })
       },
       showBigImg(item, index) {

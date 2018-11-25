@@ -45,7 +45,6 @@
     },
     methods: {
       handleRemove(file, fileList) {
-        console.log(file, fileList);
       },
       handlePictureCardPreview(file) {
         this.imgUrl = file.url;
@@ -70,7 +69,7 @@
           define: this.desc,
           file: this.imgUrl
         }
-        this.$http.get('http://112.74.55.229:8090/bc/commitpeopleplan.xhtml', {params: params})
+        this.$http.get('http://192.168.0.100:8080/bc/commitpeopleplan.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             alert("提交成功")
@@ -91,29 +90,38 @@
 </script>
 
 <style scoped>
+  .submit {
+    padding: 15px;
+  }
   ul {
-    padding: 10px;
     margin: 0;
     list-style: none;
   }
   
   li {
-    padding: 15px 0;
+    padding: 10px 0;
   }
-  
+
   .label {
     display: block;
     margin-bottom: 15px;
   }
   
   .name {
+    position: relative;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
   }
   
   .name .label {
-    margin-right: 20px;
+    position: absolute;
+    left: 0;
     margin-bottom: 0;
+  }
+
+  .name p {
+    margin-left: 70px;
   }
 
   .footer {
@@ -122,5 +130,7 @@
   }
   .footer .btn {
     width: 200px;
+    color: #fff;
+    background: #50a095;
   }
 </style>

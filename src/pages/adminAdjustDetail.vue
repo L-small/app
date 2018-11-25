@@ -2,24 +2,27 @@
   <div class="list">
     <p class="title">原设备信息</p>
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="substationname" label="变电站名称" width="80">
+      <el-table-column prop="substationname" label="变电站名称" width="65">
       </el-table-column>
-      <el-table-column prop="devicemanager" label="设备名称" width="140">
+      <el-table-column prop="devicemanager" label="设备名称" width="120">
       </el-table-column>
       <el-table-column prop="aName" label="设备主人A角" width="65">
       </el-table-column>
       <el-table-column prop="bName" label="设备主人B角" width="65">
       </el-table-column>
-      <el-table-column prop="class" label="所在班组" width="80">
+      <el-table-column prop="class" label="所在班组" width="60">
+        <template slot-scope="scope">
+          <!-- <p>{{scope.row | filterClass}}</p> -->
+        </template>
       </el-table-column>
-      <el-table-column prop="list" label="设备范围">
+      <el-table-column prop="explain" label="设备范围">
       </el-table-column>
     </el-table>
     <p class="title">调整为</p>
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="substationname" label="变电站名称" width="80">
+      <el-table-column prop="substationname" label="变电站名称" width="65">
       </el-table-column>
-      <el-table-column prop="devicemanager" label="设备名称" width="140">
+      <el-table-column prop="devicemanager" label="设备名称" width="120">
       </el-table-column>
       <el-table-column label="设备主人A角" width="120">
         <template slot-scope="scope">
@@ -37,26 +40,34 @@
         </el-select>
         </template>
       </el-table-column>
-      <el-table-column prop="class" label="所在班组" width="80">
+      <el-table-column prop="class" label="所在班组" width="60">
+        <template slot-scope="scope">
+          <!-- <p>{{scope.row.class | filterClass}}</p> -->
+        </template>
       </el-table-column>
-      <el-table-column prop="list" label="设备范围">
+      <el-table-column prop="explain" label="设备范围">
       </el-table-column>
     </el-table>
     <div class="notify">
-      <el-button type="success" @click="change">确认变更</el-button>
+      <el-button class="btn" @click="change">确认变更</el-button>
     </div>
   </div>
 </template>
 
 <style scoped>
   .title {
+    margin-top: 25px;
     font-size: 18px;
     text-align: center;
-    color: #f56c6c;
+    color: #50a095;
   }
   .notify {
     margin-top: 40px;
     text-align: center;
+  }
+  .notify .btn {
+    color: #fff;
+    background: #50a095;
   }
 </style>
 
@@ -94,7 +105,11 @@
     },
     created() {
       this.tableData.push(JSON.parse(this.$route.params.info))
-      console.log(this.tableData)
+    },
+    filters: {
+      filterClass() {
+
+      }
     },
     methods: {
       handleData() {
@@ -108,13 +123,13 @@
           role: 'a',
           userid: this.userNameA
         }
-        const first = this.$http.get('http://112.74.55.229:8090/bc/changedevice.xhtml', {params: firstParams})
+        const first = this.$http.get('http://192.168.0.100:8080/bc/changedevice.xhtml', {params: firstParams})
         let secondParams = {
           id: this.tableData[0].id,
           role: 'b',
           userid: this.userNameB
         }
-        const second = this.$http.get('http://112.74.55.229:8090/bc/changedevice.xhtml', {params: secondParams})
+        const second = this.$http.get('http://192.168.0.100:8080/bc/changedevice.xhtml', {params: secondParams})
         Promise.all([first, second]).then((res) => {
           let alertFg = false
           res.map((item) => {

@@ -1,17 +1,17 @@
 <template>
-  <div class="month">
-    <el-collapse v-model="activeNames" style="width:100%;">
+  <div class="assist-month">
+    <el-collapse v-model="activeNames">
       <el-collapse-item :title="`${item.title}`" :name="index" v-for="(item, index) in monList">
         <div class="item" v-for="subItem in item.list">
-          <p class="name">（{{subItem.require | filterRequire}}）{{subItem.job}}</p>
+          <p>（{{subItem.require | filterRequire}}）{{subItem.job}}</p>
           <el-date-picker class="picker" v-model="subItem.time" :default-value="defaultTime" type="date" placeholder="选择日期">
           </el-date-picker>
         </div>
       </el-collapse-item>
     </el-collapse>
-    <!-- <div class="footer">
-      <el-button class="btn" @click="submit">提交计划</el-button>
-    </div> -->
+    <div class="footer">
+      <el-button class="btn" type="success" @click="submit">提交计划</el-button>
+    </div>
   </div>
 </template>
 
@@ -120,13 +120,13 @@
       },
       handleData() {
         let string = ''
-        let prodMonth = []
+        let assistMonth = []
         this.ajaxData.map((item) => {
-          if (item.classify === '1') {
-            prodMonth.push(item)
+          if (item.classify === '2') {
+            assistMonth.push(item)
           }
         })
-        this.ajaxData = prodMonth
+        this.ajaxData = assistMonth
         this.ajaxData.map((item) => {
           if (string.indexOf(item.dimension) === -1) {
             string += item.dimension + ','
@@ -163,16 +163,18 @@
   }
 </script>
 <style>
-  .month .el-collapse-item__header {
+  .assist-month .el-collapse-item__header {
     padding-left: 15px;
     color: #fff;
     background: #50a095;
   }
-  .month .el-collapse-item__content {
+  .assist-month .el-collapse-item__content {
     padding: 15px;
   }
-  .month .el-date-editor  {
+  .assist-month .el-input__inner {
     width: 170px;
+  }
+  .assist-month .el-date-editor {
     margin-left: 10px;
   }
 </style>
@@ -187,9 +189,6 @@
   
   .picker {
     height: 40px;
-  }
-  .name {
-    flex: 1;
   }
   
   .footer {

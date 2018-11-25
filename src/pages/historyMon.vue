@@ -1,7 +1,7 @@
 <template>
   <div class="score">
     <div class="condition">
-      <p>选择日期：</p>
+      <p class="title">选择日期：</p>
       <el-date-picker
         v-model="time"
         type="month"
@@ -9,7 +9,7 @@
       </el-date-picker>
     </div>
     <div class="button">
-      <el-button class="btn" type="success" @click="init">查询</el-button>
+      <el-button class="btn" @click="init">查询</el-button>
     </div>
     <el-table :data="tableData" stripe>
       <el-table-column type="index" label="序号" width="80">
@@ -45,9 +45,9 @@
       init() {
         let params = {
           id: this.userInfo.id,
-          month: new Date(this.time).getMonth() + 2
+          month: new Date(this.time).getMonth() + 1
         }
-        this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
+        this.$http.get('http://192.168.0.100:8080/bc/showpeopleplan.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             this.tableData = JSON.parse(res.body.data)
@@ -64,9 +64,14 @@
 
 <style scoped>
 .condition {
+  margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.title {
+  font-size: 14px;
+  color: #333;
 }
 .button {
   margin: 15px auto 35px;
@@ -74,5 +79,7 @@
 }
 .button .btn {
   width: 200px;
+  color: #fff;
+  background: #50a095;
 }
 </style>
