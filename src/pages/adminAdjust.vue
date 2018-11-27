@@ -29,7 +29,8 @@
       return {
         tableData: [],
         userInfo: {},
-        ajaxData: {}
+        ajaxData: {},
+        ajaxFlag: false
       }
     },
     created() {
@@ -66,21 +67,23 @@
         this.$router.push({name: 'adminAdjustDetail', params: {info: JSON.stringify(item)}})
       },
       getData() {
+        this.ajaxFlag = true
         let params = {
           id: this.userInfo.id,
           uid: 1
         }
-        this.$http.get('http://192.168.0.100:8080/bc/getdevice.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/getdevice.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)
             this.handleData()
           } else {
-            alert(res.msg)
+            alert("请求失败")
           }
         })
         .catch((err) => {
-          alert(err)
+          alert("请求失败")
+          console.log(err)
         })
       }
     },

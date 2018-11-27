@@ -3,30 +3,30 @@
     <el-collapse v-model="activeNames" @change="handleChange">
       <p class="business"><i class="el-icon-edit"></i>&nbsp;生产类</p>
       <el-collapse-item v-for="(item, index) in prodLists" class="col" :title="item.name" :name="index * 2 + 1">
-        <div class="item" v-for="(subItem, subIndex) in item.list">
+        <div class="item" v-for="(subItem, subIndex) in item.list" v-if="subItem.flag === '6'">
           <p class="label">{{subItem.dimension}}</p>
-          <p class="type">{{subItem.job}}（{{subItem.correlation}}）</p>
+          <p class="type">（{{subItem.correlation}}）{{subItem.job}}</p>
           <p class="desc">{{subItem.define}}</p>
           <div class="img" v-if="subItem.file">
-            <div v-for="(imgItem, imgIndex) in subItem.file" @click="showBigImg(subItem, imgIndex)" class="img-item">
-              <img :src="imgItem" alt="">
+            <div v-for="(imgItem, imgIndex) in subItem.file" @click="showBigImg(imgItem, imgIndex)" class="img-item">
+              <img :src="'http://112.74.55.229:8090/bc/' + imgItem" alt="">
             </div>
           </div>
           <div class="option">
-            <el-button @click="submit(item, index, subItem, subIndex, 'off')">驳回</el-button>
-            <el-button type="success" @click="submit(item, index, subItem, subIndex, 'ok')">确认完成</el-button>
+            <el-button @click="submit(item, index, subItem, subIndex, 8)">驳回</el-button>
+            <el-button type="success" @click="submit(item, index, subItem, subIndex, 7)">确认完成</el-button>
           </div>
         </div>
       </el-collapse-item>
       <p class="business"><i class="el-icon-edit"></i>&nbsp;辅助类</p>
       <el-collapse-item v-for="(item, index) in assistLists" class="col" :title="item.people" :name="(index + 1) * 2">
-        <div class="item" v-for="(subItem, subIndex) in item.list">
-          <p class="label">{{subItem.label}}</p>
-          <p class="type">{{item.title}}（{{item.type}}）</p>
-          <p class="desc">{{subItem.desc}}</p>
+        <div class="item" v-for="(subItem, subIndex) in item.list" v-if="subItem.flag === '6'">
+          <p class="label">{{subItem.dimension}}</p>
+          <p class="type">（{{subItem.correlation}}）{{subItem.job}}</p>
+          <p class="desc">{{subItem.define}}</p>
           <div class="img">
-            <div v-for="(imgItem, imgIndex) in subItem.img" @click="showBigImg(subItem, imgIndex)" class="img-item">
-              <img :src="imgItem" alt="">
+            <div v-for="(imgItem, imgIndex) in subItem.file" @click="showBigImg(imgItem, imgIndex)" class="img-item">
+              <img :src="'http://112.74.55.229:8090/bc/' + imgItem" alt="">
             </div>
           </div>
           <div class="option">
@@ -101,7 +101,8 @@
         prodLists: [],
         assistLists: [],
         userInfo: {},
-        ajaxData: ''
+        ajaxData: '',
+        ajaxFg: false
       }
     },
     created() {
@@ -119,14 +120,17 @@
         return month
       },
       init() {
-        this.$http.get('http://192.168.0.100:8080/bc/showpeopleplanalltoday.xhtml')
+        this.$http.get('http://112.74.55.229:8090/bc/showpeopleplanalltoday.xhtml')
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)
             this.handelData()
+          } else {
+            alert("请求失败")
           }
         })
         .catch((err) => {
+          alert("请求失败")
           console.log(err)
         })
       },
@@ -165,6 +169,9 @@
           obj.name = item
           prodData.map((subItem) => {
             if (subItem.name === item) {
+              if (subItem.file) {
+                subItem.file = subItem.file.split(',')
+              }
               list.push(subItem)
             }
           })
@@ -177,6 +184,9 @@
           obj.name = item
           assistData.map((subItem) => {
             if (subItem.name === item) {
+              if (subItem.file) {
+                subItem.file = subItem.file.split(',')
+              }
               list.push(subItem)
             }
           })
@@ -186,10 +196,14 @@
       },
       handleChange() {
       },
-      remove(arr, val) {
+      remove(arr, index) {
         arr.splice(index, 1);
       },
       submit(item, index, subItem, subIndex, status) {
+        if (this.ajaxFg) {
+          return
+        }
+        this.ajaxFg = true
         let params = {
           flag: status,
           month: new Date().getMonth() + 1,
@@ -199,23 +213,29 @@
           define: subItem.define,
           file: subItem.file
         }
-        this.$http.get('http://192.168.0.100:8080/bc/commitpeopleplan.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/commitpeopleplan.xhtml', {params: params})
         .then((res) => {
+          this.ajaxFg = false
+          console.log(res.body.code)
           if (res.body.code === 200) {
             if (item.list.length > 1) {
               this.remove(item.list, subIndex)
             }
             alert('成功');
+          } else {
+            alert("请求失败")
           }
         })
         .catch((err) => {
+          this.ajaxFg = false
           console.log(err)
-          alert("失败")
+          alert("请求失败")
         })
       },
       showBigImg(item, index) {
+        console.log('http://112.74.55.229:8090/bc/' + item)
         ImagePreview({
-          images: item.img,
+          images: 'http://112.74.55.229:8090/bc/' + item,
           startPosition: index,
         });
       }

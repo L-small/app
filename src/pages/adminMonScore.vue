@@ -29,7 +29,8 @@
       return {
         tableData: [],
         ajaxQueue: [],
-        ajaxData: []
+        ajaxData: [],
+        ajaxFg: false
       }
     },
     created() {
@@ -48,6 +49,10 @@
         })
       },
       submit() {
+        if (this.ajaxFg) {
+          return 
+        }
+        this.ajaxFg = true
         this.handleScore()
         const list = []
         this.tableData.map((item, index) => {
@@ -57,10 +62,11 @@
             totalvalue: item.totalValue,
             addscore: item.addValue
           }
-          let name = this.$http.get('http://192.168.0.100:8080/bc/addvalueuser.xhtml', {params: params})
+          let name = this.$http.get('http://112.74.55.229:8090/bc/addvalueuser.xhtml', {params: params})
           list.push(name)
         })
         Promise.all(list).then((res) => {
+          this.ajaxFg = false
           let failFg = false
           res.map((item) => {
             if (item.body.code !== 200) {
@@ -98,7 +104,7 @@
         console.log(this.tableData)
       },
       getData() {
-        this.$http.get('http://192.168.0.100:8080/bc/getalluser.xhtml')
+        this.$http.get('http://112.74.55.229:8090/bc/getalluser.xhtml')
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)

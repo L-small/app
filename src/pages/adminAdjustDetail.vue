@@ -100,7 +100,8 @@
         }, {
           value: '2',
           label: '吴鑫'
-        }]
+        }],
+        ajaxFlag: false
       }
     },
     created() {
@@ -116,6 +117,10 @@
 
       },
       change() {
+        if (this.ajaxFlag) {
+          return
+        }
+        this.ajaxFlag = true
         let firstFg = false
         let secondFg = false
         let firstParams = {
@@ -123,13 +128,13 @@
           role: 'a',
           userid: this.userNameA
         }
-        const first = this.$http.get('http://192.168.0.100:8080/bc/changedevice.xhtml', {params: firstParams})
+        const first = this.$http.get('http://112.74.55.229:8090/bc/changedevice.xhtml', {params: firstParams})
         let secondParams = {
           id: this.tableData[0].id,
           role: 'b',
           userid: this.userNameB
         }
-        const second = this.$http.get('http://192.168.0.100:8080/bc/changedevice.xhtml', {params: secondParams})
+        const second = this.$http.get('http://112.74.55.229:8090/bc/changedevice.xhtml', {params: secondParams})
         Promise.all([first, second]).then((res) => {
           let alertFg = false
           res.map((item) => {
@@ -138,11 +143,17 @@
             }
           })
           if (alertFg) {
+            this.ajaxFlag = false
             alert('修改失败')
           } else {
+            this.ajaxFlag = false
             alert('修改成功')
             history.go(-1)
           }
+        })
+        .catch((err) => {
+          this.ajaxFlag = false
+          alert("修改失败")
         })
       }
     },

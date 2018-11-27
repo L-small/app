@@ -9,9 +9,9 @@
         </div>
       </el-collapse-item>
     </el-collapse>
-    <!-- <div class="footer">
+    <div class="footer">
       <el-button class="btn" @click="submit">提交计划</el-button>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -29,10 +29,11 @@
       }
     },
     created() {
-      this.init()
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.defaultTime = new Date()
       this.defaultTime.setMonth(new Date().getMonth() + 1)
+      this.verify()
+      this.init()
     },
     filters: {
       filterRequire(item) {
@@ -44,6 +45,35 @@
       }
     },
     methods: {
+      verify() {
+        let params = {
+          id: this.userInfo.id,
+          month: new Date().getMonth() + 1
+          // month: this.nextMonth()  todo
+        }
+        this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
+        .then((res) => {
+          if (res.body.code === 200) {
+            const list = JSON.parse(res.body.data)
+            if (list.length && list[0].flag === '1' || list.length && list[0].flag === '2') {
+              alert("已经编辑过下月计划")
+              history.go(-1)
+            }
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      },
+      nextMonth() {
+        let month = new Date().getMonth() + 1
+        if (month + 1 > 12) {
+          month = 1
+        } else {
+          month = month + 1
+        }
+        return month
+      },
       filterPlan() {
         this.monList.map((item) => {
           let arrayItem = []
@@ -82,14 +112,15 @@
             if (subItem.time) {
               let params = {
                 flag: 1,
-                month: this.nextMonth(),
+                // month: this.nextMonth(),   todo
+                month: new Date().getMonth() + 1,
                 time: new Date(subItem.time).getTime(),
                 userid: this.userInfo.id,
                 planid: subItem.id,
                 define: '',
                 file: ''
               }
-              let name = this.$http.get('http://192.168.0.100:8080/bc/commitpeopleplan.xhtml', {params: params})
+              let name = this.$http.get('http://112.74.55.229:8090/bc/commitpeopleplan.xhtml', {params: params})
               all.push(name)
             }
           })
@@ -148,7 +179,7 @@
         })
       },
       init() {
-        this.$http.get('http://192.168.0.100:8080/bc/getplan.xhtml')
+        this.$http.get('http://112.74.55.229:8090/bc/getplan.xhtml')
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)
@@ -205,5 +236,7 @@
   
   .footer .btn {
     width: 300px;
+    background: #50a095;
+    color: #fff;
   }
 </style>

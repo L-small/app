@@ -21,7 +21,7 @@ export default {
     return {
       todayList: [],
       userInfo: {},
-      ajaxData: {},
+      ajaxData: [],
       successFg: true
     }
   },
@@ -50,20 +50,28 @@ export default {
       return `${yaer}-${mon}-${day}`
     },
     handleData() {
+      const list = []
+      this.ajaxData.map((item) => {
+        if (item.flag === '2') {
+          list.push(item)
+        }
+      })
+      if (list.length === 0) {
+        this.successFg = false
+      } else {
+        this.successFg = true
+      }
+      this.todayList = list
     },
     initData() {
       const params = {
         id: this.userInfo.id
       }
-      this.$http.get('http://192.168.0.100:8080/bc/showpeopleplantoday.xhtml', {params: params})
+      this.$http.get('http://112.74.55.229:8090/bc/showpeopleplantoday.xhtml', {params: params})
       .then((res) => {
         if (res.body.code === 200) {
-          if (JSON.parse(res.body.data).length === 0) {
-            this.successFg = false
-          } else {
-            this.successFg = true
-          }
-          this.todayList = JSON.parse(res.body.data)
+          this.ajaxData = JSON.parse(res.body.data)
+          this.handleData()
         } else {
           this.successFg = false
           alert(res.body.msg)

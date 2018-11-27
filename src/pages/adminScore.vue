@@ -34,7 +34,8 @@
         tableData: [],
         allMoney: '',
         userInfo: '',
-        ajaxData: []
+        ajaxData: [],
+        ajaxFg: false
       }
     },
     created() {
@@ -43,6 +44,10 @@
     },
     methods: {
       submit() {
+        if (this.ajaxFg) {
+          return
+        }
+        this.ajaxFg = true
         const list = []
         this.tableData.map((item, index) => {
           let params = {
@@ -50,10 +55,11 @@
             id: item.id,
             score30: this.allMoney
           }
-          let name = this.$http.get('http://192.168.0.100:8080/bc/adduserget.xhtml', {params: params})
+          let name = this.$http.get('http://112.74.55.229:8090/bc/adduserget.xhtml', {params: params})
           list.push(name)
         })
         Promise.all(list).then((res) => {
+          this.ajaxFg = false
           let failFg = false
           res.map((item) => {
             if (item.body.code !== 200) {
@@ -74,6 +80,7 @@
           }
         })
         .catch((err) => {
+          this.ajaxFg = false
           alert('提交失败')
         })
       },
@@ -90,16 +97,17 @@
         console.log(this.tableData)
       },
       getData() {
-        this.$http.get('http://192.168.0.100:8080/bc/getalluser.xhtml')
+        this.$http.get('http://112.74.55.229:8090/bc/getalluser.xhtml')
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)
             this.handleData()
           } else {
-            alert(res.body.msg)
+            alert("请求失败")
           }
         })
         .catch((err) => {
+          alert("请求失败")
           console.log(err)
         })
       }

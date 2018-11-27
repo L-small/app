@@ -1,5 +1,7 @@
 <template>
-  <div class="hello">
+  <div class="alert">
+    <p class="title">消息提示</p>
+    <p>{{content}}</p>
   </div>
 </template>
 

@@ -82,26 +82,26 @@
           this.$router.push({name: 'login'})
         }
       },
-      getToday() {
-        const params = {
-          id: this.userInfo.id
-        }
-        this.$http.get('http://192.168.0.100:8080/bc/showpeopleplantoday.xhtml', {params: params})
-        .then((res) => {
-          if (res.body.code === 200) {
-            if (res.body.data.length !== 0) {
+      // getToday() {
+      //   const params = {
+      //     id: this.userInfo.id
+      //   }
+      //   this.$http.get('http://112.74.55.229:8090/bc/showpeopleplantoday.xhtml', {params: params})
+      //   .then((res) => {
+      //     if (res.body.code === 200) {
+      //       if (res.body.data.length !== 0) {
               
-            }
-            this.todayList = JSON.parse(res.body.data)
-          } else {
-            this.successFg = false
-            alert(res.body.msg)
-          }
-        })
-        .catch((err) => {
-          alert(err)
-        })
-      }
+      //       }
+      //       this.todayList = JSON.parse(res.body.data)
+      //     } else {
+      //       this.successFg = false
+      //       alert("请求失败")
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     alert("请求失败")
+      //   })
+      // }
     },
     components: {
   

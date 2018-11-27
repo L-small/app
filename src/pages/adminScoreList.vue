@@ -56,12 +56,12 @@
           id: this.userInfo.id,
           month: this.month
         }
-        this.$http.get('http://192.168.0.100:8080/bc/getalluserget.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/getalluserget.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             this.tableData = JSON.parse(res.body.data)
           } else {
-            alert(res.body.msg)
+            alert("请求失败")
           }
         })
         .catch((err) => {

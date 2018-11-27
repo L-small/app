@@ -73,22 +73,22 @@
       }
     },
     methods: {
-      notify(item) {
-        let params = {
-          list: [item.id]
-        }
-        this.$http.get('', {params: params})
-        .then((res) => {
-          if (res.code === 200) {
-            alert('已通知所有未完成人员')
-          } else {
-            alert('请重试')
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-      },
+      // notify(item) {
+      //   let params = {
+      //     list: [item.id]
+      //   }
+      //   this.$http.get('', {params: params})
+      //   .then((res) => {
+      //     if (res.code === 200) {
+      //       alert('已通知所有未完成人员')
+      //     } else {
+      //       alert('请重试')
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err)
+      //   })
+      // },
       nextMonth() {
         let month = new Date().getMonth() + 1
         if (month + 1 > 12) {
@@ -98,28 +98,28 @@
         }
         return month
       },
-      notifyAll() {
-        let array = []
-        this.tableData.map((item) => {
-          if (item.status) {
-            array.push(item.id)
-          }
-        })
-        let params = {
-          list: array
-        }
-        this.$http.get('', {params: params})
-        .then((res) => {
-          if (res.code === 200) {
-            alert('已通知所有未完成人员')
-          } else {
-            alert('请重试')
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-      },
+      // notifyAll() {
+      //   let array = []
+      //   this.tableData.map((item) => {
+      //     if (item.status) {
+      //       array.push(item.id)
+      //     }
+      //   })
+      //   let params = {
+      //     list: array
+      //   }
+      //   this.$http.get('', {params: params})
+      //   .then((res) => {
+      //     if (res.code === 200) {
+      //       alert('已通知所有未完成人员')
+      //     } else {
+      //       alert('请重试')
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err)
+      //   })
+      // },
       handleData() {
         const list = []
         this.ajaxData.map((item) => {
@@ -131,17 +131,21 @@
       },
       init() {
         let params = {
-          month: this.nextMonth()
+          month: new Date().getMonth() + 1
+          // month: this.nextMonth() todo
         }
-        this.$http.get('http://192.168.0.100:8080/bc/showpeopleallplan.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/showpeopleallplan.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)
             this.handleData()
+          } else {
+            alert("请求失败")
           }
         })
         .catch((err) => {
           console.log(err)
+          alert("请求失败")
         })
       },
       toApproval(item) {

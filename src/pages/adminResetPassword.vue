@@ -26,6 +26,7 @@
       return {
         tableData: [],
         userInfo: '',
+        ajaxFg: false
       }
     },
     created() {
@@ -34,12 +35,17 @@
     },
     methods: {
       reset(id) {
+        if (this.ajaxFg) {
+          return
+        }
+        this.ajaxFg = true
         let params = {
           id: id,
           password: 123
         }
-        this.$http.get('http://192.168.0.100:8080/bc/passworduser.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/passworduser.xhtml', {params: params})
         .then((res) => {
+          this.ajaxFg = false
           if (res.body.code === 200) {
             alert('重置成功')
           } else {
@@ -47,19 +53,21 @@
           }
         })
         .catch((err) => {
+          this.ajaxFg = false
           alert("重置失败")
         })
       },
       getData() {
-        this.$http.get('http://192.168.0.100:8080/bc/getalluser.xhtml')
+        this.$http.get('http://112.74.55.229:8090/bc/getalluser.xhtml')
         .then((res) => {
           if (res.body.code === 200) {
             this.tableData = JSON.parse(res.body.data)
           } else {
-            alert(res.body.msg)
+            alert("请求失败")
           }
         })
         .catch((err) => {
+          alert("请求失败")
           console.log(err)
         })
       }

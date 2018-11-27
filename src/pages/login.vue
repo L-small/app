@@ -42,7 +42,8 @@
           label: '二班'
         }],
         userNames: [],
-        userInfo: {}
+        userInfo: {},
+        ajaxFg: false
       }
     },
     created() {
@@ -70,19 +71,24 @@
         this.form.password = ''
       },
       // getUserName() {
-      //   this.$http.get('http://192.168.0.100:8080/bc/getuser.xhtml')
+      //   this.$http.get('http://112.74.55.229:8090/bc/getuser.xhtml')
       //   .then((res) => {
       //     if (res.data.code === 200) {
       //     }
       //   })
       // },
       submit() {
+        if (this.ajaxFg) {
+          return
+        }
+        this.ajaxFg = true
         let params = {
           name: this.form.userName,
           password: this.form.password
         }
-        this.$http.get('http://192.168.0.100:8080/bc/loginuser.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/loginuser.xhtml', {params: params})
         .then((res) => {
+          this.ajaxFg = false
           if (res.body.code === 200) {
             localStorage.setItem('userInfo', JSON.stringify(JSON.parse(res.body.data)[0]))
             this.userInfo = JSON.parse(res.body.data)[0]
@@ -96,6 +102,7 @@
           }
         })
         .catch((err) => {
+          this.ajaxFg = false
           alert("登录失败")
         })
       },
@@ -103,7 +110,7 @@
         const params = {
           id: this.userInfo.id
         }
-        this.$http.get('http://192.168.0.100:8080/bc/showpeopleplantoday.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/showpeopleplantoday.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             const data = JSON.parse(res.body.data)

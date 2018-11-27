@@ -25,7 +25,8 @@
         ajaxData: [],
         titles: [],
         userInfo: {},
-        defaultTime: ''
+        defaultTime: '',
+        ajaxFg: false
       }
     },
     created() {
@@ -76,25 +77,31 @@
         return month
       },
       submit() {
+        if (this.ajaxFg) {
+          return
+        }
+        this.ajaxFg = true
         let all = []
         this.monList.map((item) => {
           item.list.map((subItem, index) => {
             if (subItem.time) {
               let params = {
                 flag: 1,
-                month: this.nextMonth(),
+                month: new Date().getMonth() + 1,
+                // month: this.nextMonth(),   todo
                 time: new Date(subItem.time).getTime(),
                 userid: this.userInfo.id,
                 planid: subItem.id,
                 define: '',
                 file: ''
               }
-              let name = this.$http.get('http://192.168.0.100:8080/bc/commitpeopleplan.xhtml', {params: params})
+              let name = this.$http.get('http://112.74.55.229:8090/bc/commitpeopleplan.xhtml', {params: params})
               all.push(name)
             }
           })
         })
         Promise.all(all).then((res) => {
+          this.ajaxFg = false
           let failFg = false
           res.map((item) => {
             if (item.body.code !== 200) {
@@ -115,6 +122,7 @@
           }
         })
         .catch(() => {
+          this.ajaxFg = false
           alert('提交失败')
         })
       },
@@ -148,7 +156,7 @@
         })
       },
       init() {
-        this.$http.get('http://192.168.0.100:8080/bc/getplan.xhtml')
+        this.$http.get('http://112.74.55.229:8090/bc/getplan.xhtml')
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)

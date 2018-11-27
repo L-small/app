@@ -16,7 +16,7 @@
       </el-table-column>
       <el-table-column label="工作内容">
         <template slot-scope="{row,$index}">
-          <p>{{row.job}}({{row.dimension}})</p>
+          <p>({{row.dimension}}){{row.job}}</p>
         </template>
       </el-table-column>
       <el-table-column prop="time" label="时间" width="100">
@@ -47,7 +47,7 @@
           id: this.userInfo.id,
           month: new Date(this.time).getMonth() + 1
         }
-        this.$http.get('http://192.168.0.100:8080/bc/showpeopleplan.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             this.tableData = JSON.parse(res.body.data)

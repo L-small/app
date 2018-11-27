@@ -77,7 +77,8 @@
           value: '吴鑫',
           label: '吴鑫'
         }],
-        userInfo: {}
+        userInfo: {},
+        ajaxFg: false
       }
     },
     created() {
@@ -85,6 +86,10 @@
     },
     methods: {
       submit() {
+        if (this.ajaxFg) {
+          return 
+        }
+        this.ajaxFg = true
         if (this.form.password !== this.form.again) {
           alert('请确认密码一致')
           return
@@ -93,12 +98,19 @@
           id: this.userInfo.id,
           password: this.form.password
         }
-        this.$http.get('http://192.168.0.100:8080/bc/passworduser.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/passworduser.xhtml', {params: params})
         .then((res) => {
+          this.ajaxFg = false
           if (res.body.code === 200) {
             alert('修改成功')
             history.go(-1)
+          } else {
+            alert("请求失败")
           }
+        })
+        .catch((err) => {
+          this.ajaxFg = false
+          alert("请求失败")
         })
       }
     },

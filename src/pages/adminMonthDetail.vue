@@ -23,7 +23,8 @@
       data() {
         return {
           details: [],
-          userInfo: ''
+          userInfo: '',
+          ajaxFg: false
         }
       },
       filters: {
@@ -40,14 +41,21 @@
         getData() {
           let params = {
             id: this.planUser,
-            month: this.nextMonth()
+            // month: this.nextMonth()  todo
+            month: new Date().getMonth() + 1
           }
-          this.$http.get('http://192.168.0.100:8080/bc/showpeopleplan.xhtml', {params: params})
+          this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
           .then((res) => {
             if (res.body.code === 200) {
               this.details = JSON.parse(res.body.data)
               // this.handelData()
+            } else {
+              alert("请求失败")
             }
+          })
+          .catch((err) => {
+            alert("请求失败")
+            console.log(err)
           })
         },
         nextMonth() {
@@ -60,21 +68,27 @@
           return month
         },
         submit(flag) {
+          if (this.ajaxFg) {
+            return
+          }
+          this.ajaxFg = true
           let all = []
           this.details.map((item) => {
             let params = {
               flag: flag,
-              month: this.nextMonth(),
+              // month: this.nextMonth(),  todo
+              month: new Date().getMonth() + 1,
               time: new Date(item.time).getTime(),
               userid: item.userid,
               planid: item.planid,
               define: '',
               file: ''
             }
-            let name = this.$http.get('http://192.168.0.100:8080/bc/commitpeopleplan.xhtml', {params: params})
+            let name = this.$http.get('http://112.74.55.229:8090/bc/commitpeopleplan.xhtml', {params: params})
             all.push(name)
           })
           Promise.all(all).then((res) => {
+            this.ajaxFg = false
             let failFg = false
             res.map((item) => {
               if (item.body.code !== 200) {
@@ -95,6 +109,7 @@
             }
           })
           .catch(() => {
+            this.ajaxFg = false
             alert('提交失败')
           })
         },

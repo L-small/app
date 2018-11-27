@@ -56,7 +56,7 @@
           month: this.month,
           id: this.userInfo.id
         }
-        this.$http.get('http://192.168.0.100:8080/bc/getalluseraddvalue.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/getalluseraddvalue.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             this.tableData = JSON.parse(res.body.data)

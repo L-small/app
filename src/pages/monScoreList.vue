@@ -16,13 +16,19 @@
       </el-table-column>
       <el-table-column prop="totalvalue" label="基础分">
       </el-table-column>
-      <el-table-column prop="detail" label="未完成工作扣分">
+      <el-table-column prop="subscore" label="未完成工作扣分">
+        <template slot-scope="scope">
+          <p>{{parseFloat(scope.row.subscore).toFixed(2)}}</p>
+        </template>
       </el-table-column>
       <el-table-column prop="addscore" label="月度调整加分">
       </el-table-column>
       <el-table-column prop="actual" label="月度实际得分">
+        <template slot-scope="scope">
+          <p>{{parseFloat(scope.row.actual).toFixed(2)}}</p>
+        </template>
       </el-table-column>
-      <el-table-column prop="diff" label="未完成工作项数">
+      <el-table-column prop="sub" label="未完成工作项数">
       </el-table-column>
     </el-table>
   </div>
@@ -55,7 +61,7 @@
           month: this.month,
           id: this.userInfo.id
         }
-        this.$http.get('http://192.168.0.100:8080/bc/getuseraddvalue.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/getuseraddvalue.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             this.tableData = JSON.parse(res.body.data)

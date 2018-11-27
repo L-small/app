@@ -52,22 +52,22 @@
       this.init();
     },
     methods: {
-      notify(item) {
-        let params = {
-          list: [item.id]
-        }
-        this.$http.get('', {params: params})
-        .then((res) => {
-          if (res.code === 200) {
-            alert('已通知所有未完成人员')
-          } else {
-            alert('请重试')
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-      },
+      // notify(item) {
+      //   let params = {
+      //     list: [item.id]
+      //   }
+      //   this.$http.get('', {params: params})
+      //   .then((res) => {
+      //     if (res.code === 200) {
+      //       alert('已通知所有未完成人员')
+      //     } else {
+      //       alert('请重试')
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err)
+      //   })
+      // },
       changeColl(item) {
         this.tableData = []
         if (item !== '') {
@@ -88,42 +88,45 @@
         let params = {
           month: this.month
         }
-        this.$http.get('http://192.168.0.100:8080/bc/showpeopleallplan.xhtml', {params: params})
+        this.$http.get('http://112.74.55.229:8090/bc/showpeopleallplan.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             this.userList = JSON.parse(res.body.data)
+          } else {
+            alert("请求失败")
           }
         })
         .catch((err) => {
           console.log(err)
+          alert("请求失败")
         })
       },
-      changeTime( ) {
+      changeTime() {
         this.userList = []
         this.tableData = []
       },
-      notifyAll() {
-        let array = []
-        this.tableData.map((item) => {
-          if (item.status) {
-            array.push(item.id)
-          }
-        })
-        let params = {
-          list: array
-        }
-        this.$http.get('', {params: params})
-        .then((res) => {
-          if (res.code === 200) {
-            alert('已通知所有未完成人员')
-          } else {
-            alert('请重试')
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-      },
+      // notifyAll() {
+      //   let array = []
+      //   this.tableData.map((item) => {
+      //     if (item.status) {
+      //       array.push(item.id)
+      //     }
+      //   })
+      //   let params = {
+      //     list: array
+      //   }
+      //   this.$http.get('', {params: params})
+      //   .then((res) => {
+      //     if (res.code === 200) {
+      //       alert('已通知所有未完成人员')
+      //     } else {
+      //       alert('请重试')
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err)
+      //   })
+      // },
       handleTime() {
         const date = new Date(this.time)
         this.month = date.getMonth() + 1
@@ -135,7 +138,7 @@
             id: id,
             month: this.month
           }
-          this.$http.get('http://192.168.0.100:8080/bc/showpeopleplan.xhtml', {params: params})
+          this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
           .then((res) => {
             if (res.body.code === 200) {
               this.tableData = JSON.parse(res.body.data)
