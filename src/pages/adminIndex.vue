@@ -1,8 +1,11 @@
 <template>
   <div class="index">
-    <div>
+    <div class="user" v-if="userInfo.name">
+      <p>当前用户：{{userInfo.name}}</p>
+    </div>
+    <div class="content">
       <el-row :gutter="20">
-        <el-col :span="6" v-for="(item, index) in adminFuns">
+        <el-col class="cell" :span="6" v-for="(item, index) in adminFuns">
           <div class="item icon" @click="toFun(item)">
             <img :src="item.icon" alt="">
             <p>{{item.name}}</p>
@@ -27,8 +30,12 @@
           name: '审批月计划(生产类)'
         }, {
           type: 'adminAssistMonth',
-          icon: require('../assets/icon_helper.png'),
+          icon: require('../assets/icon_assist.png'),
           name: '审批月计划(辅助类)'
+        }, {
+          type: 'adminHistoryMon',
+          icon: require('../assets/icon_list.png'),
+          name: '查看月计划'
         }, {
           type: 'adminScore',
           icon: require('../assets/icon_score.png'),
@@ -48,16 +55,16 @@
         }, {
           type: 'adminAdjust',
           icon: require('../assets/icon_adjust.png'),
-          name: '设备主人调整'
+          name: '设备信息维护'
         }, {
           type: 'list',
           query: 'admin',
           icon: require('../assets/icon_device.png'),
           name: '设备主人清单'
         }, {
-          type: 'adminHistoryMon',
-          icon: require('../assets/icon_list.png'),
-          name: '查看月计划'
+          type: 'adminUserInfo',
+          icon: require('../assets/icon_userinfo.png'),
+          name: '维护人员信息'
         }, {
           type: 'adminResetPassword',
           icon: require('../assets/icon_password.png'),
@@ -110,8 +117,18 @@
 </script>
 
 <style scoped>
-  .index {
+  .content {
     padding: 15px;
+  }
+
+  .user {
+    display: flex;
+    height: 40px;
+    padding: 0 15px;
+    line-height: 40px;
+    font-size: 14px;
+    background: #50a095;
+    color: #fff;
   }
 
   .fun {
@@ -120,22 +137,51 @@
   }
   
   .item {
+    position: relative;
     width: 110px;
     height: 120px;
     margin: 20px auto;
     padding: 30px 5px 0px;
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
     text-align: center;
-    color: #fff;
+    color: #333;
+  }
+  .cell {
+    position: relative;
+  }
+  .cell:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 0px;
+    width: 1px;
+    height: 80%;
+    background: #ddd;
+    transform: translateY(-50%);
+  }
+  .cell:nth-of-type(4n):after {
+    display: none;
+  }
+  .cell::before {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    width: 80%;
+    height: 1px;
+    background: #ddd;
+    transform: translateX(-50%);
   }
   
   .item img {
-    width: 28px;
-    height: 28px;
+    width: 35px;
+    height: 35px;
     margin-bottom: 15px;
   }
   
   .item.icon {
-    background: #50a095;
+    /* background: #50a095; */
   }
 </style>

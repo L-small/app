@@ -16,13 +16,19 @@
       </el-table-column>
       <el-table-column prop="totalvalue" label="基础分">
       </el-table-column>
-      <el-table-column prop="detail" label="未完成工作扣分">
+      <el-table-column prop="subscore" label="未完成工作扣分">
+        <template slot-scope="{row,$index}">
+          <p>{{row.subscore | filterSubScore}}</p>
+        </template>
       </el-table-column>
       <el-table-column prop="addscore" label="月度调整加分">
       </el-table-column>
       <el-table-column prop="actual" label="月度实际得分">
+        <template slot-scope="{row,$index}">
+          <p>{{row.actual | filterActual}}</p>
+        </template>
       </el-table-column>
-      <el-table-column prop="diff" label="未完成工作项数">
+      <el-table-column prop="sub" label="未完成工作项数">
       </el-table-column>
     </el-table>
   </div>
@@ -43,6 +49,19 @@
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.time = `${new Date().getFullYear()}-${new Date().getMonth() + 1}`
       this.getData()
+    },
+    filters: {
+      filterSubScore(value) {
+        const data = parseFloat(value).toFixed(2)
+        if (data) { 
+          return -data
+        } else {
+          return data
+        }
+      },
+      filterActual(value) {
+        return parseFloat(value).toFixed(2)
+      }
     },
     methods: {
       filterMon() {

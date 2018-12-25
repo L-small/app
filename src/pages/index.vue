@@ -1,8 +1,12 @@
 <template>
   <div class="index">
-    <div>
+    <div class="user" v-if="userInfo.name">
+      <p>当前用户：{{userInfo.name}}</p>
+      <p>用户类别：{{userInfo.classify === '1' ? '生产类' : '辅助类'}}</p>
+    </div>
+    <div class="content">
       <el-row :gutter="20">
-        <el-col :span="6" v-for="(item, index) in userFuns">
+        <el-col class="cell" :span="6" v-for="(item, index) in userFuns">
           <div class="item icon" @click="toFun(item)">
             <img :src="item.icon" alt="">
             <p>{{item.name}}</p>
@@ -23,7 +27,7 @@
           name: '个人计划编辑(生产类)'
         }, {
           type: 'assistMonth',
-          icon: require('../assets/icon_helper.png'),
+          icon: require('../assets/icon_assist.png'),
           name: '个人计划编辑(辅助类)'
         }, {
           type: 'todayList',
@@ -86,7 +90,7 @@
       diffPlan() {
         if (this.userInfo.classify === '1') {
           this.userFuns.splice(1,1)
-        } else {
+        } else if (this.userInfo.classify === '2') {
           this.userFuns.splice(0,1)
         }
       }
@@ -98,8 +102,19 @@
 </script>
 
 <style scoped>
-  .index {
+  .content {
     padding: 15px;
+  }
+
+  .user {
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    padding: 0 15px;
+    line-height: 40px;
+    font-size: 14px;
+    background: #50a095;
+    color: #fff;
   }
 
   .fun {
@@ -112,18 +127,47 @@
     height: 120px;
     margin: 20px auto;
     padding: 30px 5px 0px;
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
     text-align: center;
-    color: #fff;
+    color: #333;
+  }
+
+  .cell {
+    position: relative;
+  }
+  .cell:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 0px;
+    width: 1px;
+    height: 80%;
+    background: #ddd;
+    transform: translateY(-50%);
+  }
+  .cell:nth-of-type(4n):after {
+    display: none;
+  }
+  .cell::before {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    width: 80%;
+    height: 1px;
+    background: #ddd;
+    transform: translateX(-50%);
   }
   
   .item img {
-    width: 28px;
-    height: 28px;
+    width: 35px;
+    height: 35px;
     margin-bottom: 15px;
   }
   
   .item.icon {
-    background: #50a095;
+    /* background: #50a095; */
   }
 </style>

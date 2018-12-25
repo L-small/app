@@ -19,6 +19,11 @@
         <el-table :data="tableData">
           <el-table-column type="index" label="序号" width="50">
           </el-table-column>
+          <el-table-column label="类别" width="70">
+            <template slot-scope="{row,$index}">
+              <p>{{row.classify | filterClassify}}</p>
+            </template>
+          </el-table-column>
           <el-table-column label="工作内容">
             <template slot-scope="{row,$index}">
               <p>({{row.dimension}}){{row.job}}</p>
@@ -50,6 +55,16 @@
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.time = `${new Date().getFullYear()}-${new Date().getMonth() + 1}`
       this.init();
+    },
+    filters: {
+      filterClassify(val) {
+        console.log(val)
+        if (val === '1') {
+          return '生产类'
+        } else {
+          return '辅助类'
+        }
+      }
     },
     methods: {
       // notify(item) {

@@ -7,12 +7,12 @@
       </el-table-column>
       <el-table-column label="基础分">
         <template slot-scope="{row,$index}">
-          <el-input v-model="row.totalValue"></el-input>
+          <el-input type="number" v-model="row.totalValue"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="月度调整加分">
         <template slot-scope="{row,$index}">
-          <el-input v-model="row.addValue"></el-input>
+          <el-input type="number" v-model="row.addValue"></el-input>
         </template>
       </el-table-column>
     </el-table>
@@ -102,6 +102,13 @@
         })
         this.tableData = list
         console.log(this.tableData)
+      },
+      checknum(obj){   
+        if(/^\d+\.?\d{0,2}$/.test(obj.value)){
+            obj.value = obj.value;
+        }else{
+            obj.value = obj.value.substring(0,obj.value.length-1);
+        }     
       },
       getData() {
         this.$http.get('http://112.74.55.229:8090/bc/getalluser.xhtml')

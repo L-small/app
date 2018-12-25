@@ -3,6 +3,9 @@
     <el-collapse v-model="activeNames" @change="handleChange">
       <p class="business"><i class="el-icon-edit"></i>&nbsp;生产类</p>
       <el-collapse-item v-for="(item, index) in prodLists" class="col" :title="item.name" :name="index * 2 + 1">
+        <div class="submit-all">
+          <el-button class="btn" type="success" @click="submitAll(item, index)">批量完成</el-button>
+        </div>
         <div class="item" v-for="(subItem, subIndex) in item.list" v-if="subItem.flag === '6'">
           <p class="label">{{subItem.dimension}}</p>
           <p class="type">（{{subItem.correlation}}）{{subItem.job}}</p>
@@ -20,6 +23,9 @@
       </el-collapse-item>
       <p class="business"><i class="el-icon-edit"></i>&nbsp;辅助类</p>
       <el-collapse-item v-for="(item, index) in assistLists" class="col" :title="item.people" :name="(index + 1) * 2">
+        <div class="submit-all">
+          <el-button class="btn" type="success" @click="submitAll(item, index)">批量完成</el-button>
+        </div>
         <div class="item" v-for="(subItem, subIndex) in item.list" v-if="subItem.flag === '6'">
           <p class="label">{{subItem.dimension}}</p>
           <p class="type">（{{subItem.correlation}}）{{subItem.job}}</p>
@@ -89,6 +95,13 @@
   margin-bottom: 20px;
   float: right;
 }
+.submit-all {
+  display: flex;
+  justify-content: flex-end;
+}
+.submit-all .btn {
+  margin-right: 15px;
+}
 </style>
 
 <script>
@@ -120,7 +133,10 @@
         return month
       },
       init() {
-        this.$http.get('http://112.74.55.229:8090/bc/showpeopleplanalltoday.xhtml')
+        let params = {
+          month: new Date().getMonth() + 1
+        }
+        this.$http.get('http://112.74.55.229:8090/bc/showpeopleplanalltoday.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)
@@ -197,7 +213,56 @@
       handleChange() {
       },
       remove(arr, index) {
+        console.log(index)
         arr.splice(index, 1);
+      },
+      submitAll(item, index) {
+        console.log(item)
+        let all = []
+        if (this.ajaxFg) {
+          return
+        }
+        this.ajaxFg = true
+        item.list.map((listItem, listIndex) => {
+          let params = {
+            flag: 7,
+            month: new Date().getMonth() + 1,
+            time: new Date(listItem.time).getTime(),
+            userid: listItem.userid,
+            planid: listItem.id,
+            define: listItem.define,
+            file: listItem.file
+          }
+          let name = this.$http.get('http://112.74.55.229:8090/bc/commitpeopleplan.xhtml', {params: params})
+          all.push(name)
+        })
+        Promise.all(all).then((res) => {
+          console.log(res)
+          this.ajaxFg = false
+          let failFg = false
+          res.map((item) => {
+            if (item.body.code !== 200) {
+              failFg = true
+            }
+          })
+          if (res.length === 0) {
+            failFg = true
+          }
+          if (res.length !== all.length) {
+            failFg = true
+          }
+          if (failFg) {
+            alert('提交失败')
+          } else {
+            alert('提交成功')
+            this.$router.go(0)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+          this.ajaxFg = false
+          alert('提交失败')
+        })
       },
       submit(item, index, subItem, subIndex, status) {
         if (this.ajaxFg) {
@@ -220,6 +285,8 @@
           if (res.body.code === 200) {
             if (item.list.length > 1) {
               this.remove(item.list, subIndex)
+            } else {
+              this.$router.go(0)
             }
             alert('成功');
           } else {
@@ -233,9 +300,8 @@
         })
       },
       showBigImg(item, index) {
-        console.log('http://112.74.55.229:8090/bc/' + item)
         ImagePreview({
-          images: 'http://112.74.55.229:8090/bc/' + item,
+          images: item,
           startPosition: index,
         });
       }

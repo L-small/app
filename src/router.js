@@ -25,6 +25,9 @@ import AdminIndex from './pages/adminIndex.vue'
 import AdminAssistMonth from './pages/adminAssistMonth.vue'
 import AdminMonScoreList from './pages/adminMonScoreList.vue'
 import AdminResetPassword from './pages/adminResetPassword.vue'
+import AdminUserInfo from './pages/adminUserInfo.vue'
+import AgainMon from './pages/againMon.vue'
+import AdminAssistMonDetail from './pages/adminAssistMonDetail.vue'
 
 Vue.use(VueRouter)
 const router = new VueRouter({
@@ -158,6 +161,18 @@ const router = new VueRouter({
     path: '/adminResetPassword',
     name: 'adminResetPassword',
     component: AdminResetPassword
+  }, {
+    path: '/adminUserInfo',
+    name: 'adminUserInfo',
+    component: AdminUserInfo
+  }, {
+    path: '/againMon',
+    name: 'againMon',
+    component: AgainMon
+  }, {
+    path: '/adminAssistMonDetail',
+    name: 'adminAssistMonDetail',
+    component: AdminAssistMonDetail
   }, {
     path: '*',
     name: 'login',

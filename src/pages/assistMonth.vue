@@ -1,16 +1,31 @@
 <template>
-  <div class="assist-month">
-    <el-collapse v-model="activeNames">
+  <div class="month">
+    <el-collapse v-model="activeNames" style="width:100%;">
       <el-collapse-item :title="`${item.title}`" :name="index" v-for="(item, index) in monList">
         <div class="item" v-for="subItem in item.list">
-          <p>（{{subItem.require | filterRequire}}）{{subItem.job}}</p>
+          <p class="name">（{{subItem.require | filterRequire}}）{{subItem.job}}</p>
           <el-date-picker class="picker" v-model="subItem.time" :default-value="defaultTime" type="date" placeholder="选择日期">
           </el-date-picker>
         </div>
       </el-collapse-item>
     </el-collapse>
+    <el-dialog title="再次确认" :visible.sync="dialogVisible" center fullscreen>
+      <el-collapse v-model="modalActiveNames" style="width:100%;">
+        <el-collapse-item :title="`${item.title}`" :name="index" v-for="(item, index) in againData">
+          <div class="item" v-for="subItem in item.list">
+            <p class="name">（{{subItem.require | filterRequire}}）{{subItem.job}}</p>
+            <el-date-picker disabled class="picker" v-model="subItem.time" :default-value="defaultTime" type="date" placeholder="选择日期">
+            </el-date-picker>
+          </div>
+        </el-collapse-item>
+      </el-collapse>
+      <div slot="footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submit">提 交</el-button>
+      </div>
+    </el-dialog>
     <div class="footer">
-      <el-button class="btn" type="success" @click="submit">提交计划</el-button>
+      <el-button class="btn" @click="again">确认计划</el-button>
     </div>
   </div>
 </template>
@@ -20,20 +35,23 @@
     data() {
       return {
         activeNames: ['1'],
+        modalActiveNames: [],
         monList: [],
         submitData: [],
         ajaxData: [],
         titles: [],
         userInfo: {},
         defaultTime: '',
-        ajaxFg: false
+        againData: [],
+        dialogVisible: false
       }
     },
     created() {
-      this.init()
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.defaultTime = new Date()
       this.defaultTime.setMonth(new Date().getMonth() + 1)
+      this.verify()
+      this.init()
     },
     filters: {
       filterRequire(item) {
@@ -45,6 +63,42 @@
       }
     },
     methods: {
+      verify() {
+        let params = {
+          id: this.userInfo.id,
+          month: new Date().getMonth() + 1
+          // month: this.nextMonth()  todo
+        }
+        this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
+        .then((res) => {
+          if (res.body.code === 200) {
+            const list = JSON.parse(res.body.data)
+            let flag = false
+            list.map((item) => {
+              // 已经提交之后的和辅助类的
+              if ((item.flag || item.flag === '3') && item.classify === '2') {
+                flag = true
+              }
+            })
+            if (flag) {
+              alert("已经编辑过下月计划")
+              history.go(-1)
+            }
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      },
+      nextMonth() {
+        let month = new Date().getMonth() + 1
+        if (month + 1 > 12) {
+          month = 1
+        } else {
+          month = month + 1
+        }
+        return month
+      },
       filterPlan() {
         this.monList.map((item) => {
           let arrayItem = []
@@ -76,19 +130,48 @@
         }
         return month
       },
+      again() {
+        const data = []
+        const info = JSON.parse(JSON.stringify(this.monList))
+        info.map((item) => {
+          item.list.map((subItem, index) => {
+            if (subItem.time) {
+              data.push(item)
+            }
+          })
+        })
+        data.map((item, index) => {
+          const list = []
+          item.list.map((subItem) => {
+            if (subItem.time) {
+              list.push(subItem)
+            }
+          })
+          item.list = list
+        })
+        const filter = []
+        let str = ''
+        data.map((item) => {
+          if (str.indexOf(item.title) === -1) {
+            filter.push(item)
+            str+=item.title
+          }
+        })
+        filter.map((item, index) => {
+          this.modalActiveNames.push(index)
+        })
+        this.againData = filter
+        this.dialogVisible = true
+      },
       submit() {
-        if (this.ajaxFg) {
-          return
-        }
-        this.ajaxFg = true
         let all = []
         this.monList.map((item) => {
           item.list.map((subItem, index) => {
             if (subItem.time) {
               let params = {
                 flag: 1,
-                month: new Date().getMonth() + 1,
                 // month: this.nextMonth(),   todo
+                month: new Date().getMonth() + 1,
                 time: new Date(subItem.time).getTime(),
                 userid: this.userInfo.id,
                 planid: subItem.id,
@@ -101,7 +184,6 @@
           })
         })
         Promise.all(all).then((res) => {
-          this.ajaxFg = false
           let failFg = false
           res.map((item) => {
             if (item.body.code !== 200) {
@@ -122,19 +204,18 @@
           }
         })
         .catch(() => {
-          this.ajaxFg = false
           alert('提交失败')
         })
       },
       handleData() {
         let string = ''
-        let assistMonth = []
+        let prodMonth = []
         this.ajaxData.map((item) => {
           if (item.classify === '2') {
-            assistMonth.push(item)
+            prodMonth.push(item)
           }
         })
-        this.ajaxData = assistMonth
+        this.ajaxData = prodMonth
         this.ajaxData.map((item) => {
           if (string.indexOf(item.dimension) === -1) {
             string += item.dimension + ','
@@ -171,18 +252,16 @@
   }
 </script>
 <style>
-  .assist-month .el-collapse-item__header {
+  .month .el-collapse-item__header {
     padding-left: 15px;
     color: #fff;
     background: #50a095;
   }
-  .assist-month .el-collapse-item__content {
+  .month .el-collapse-item__content {
     padding: 15px;
   }
-  .assist-month .el-input__inner {
+  .month .el-date-editor  {
     width: 170px;
-  }
-  .assist-month .el-date-editor {
     margin-left: 10px;
   }
 </style>
@@ -198,6 +277,9 @@
   .picker {
     height: 40px;
   }
+  .name {
+    flex: 1;
+  }
   
   .footer {
     position: fixed;
@@ -212,5 +294,7 @@
   
   .footer .btn {
     width: 300px;
+    background: #50a095;
+    color: #fff;
   }
 </style>

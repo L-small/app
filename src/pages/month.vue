@@ -9,8 +9,23 @@
         </div>
       </el-collapse-item>
     </el-collapse>
+    <el-dialog title="再次确认" :visible.sync="dialogVisible" center fullscreen>
+      <el-collapse v-model="modalActiveNames" style="width:100%;">
+        <el-collapse-item :title="`${item.title}`" :name="index" v-for="(item, index) in againData">
+          <div class="item" v-for="subItem in item.list">
+            <p class="name">（{{subItem.require | filterRequire}}）{{subItem.job}}</p>
+            <el-date-picker disabled class="picker" v-model="subItem.time" :default-value="defaultTime" type="date" placeholder="选择日期">
+            </el-date-picker>
+          </div>
+        </el-collapse-item>
+      </el-collapse>
+      <div slot="footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submit">提 交</el-button>
+      </div>
+    </el-dialog>
     <div class="footer">
-      <el-button class="btn" @click="submit">提交计划</el-button>
+      <el-button class="btn" @click="again">确认计划</el-button>
     </div>
   </div>
 </template>
@@ -20,12 +35,15 @@
     data() {
       return {
         activeNames: ['1'],
+        modalActiveNames: [],
         monList: [],
         submitData: [],
         ajaxData: [],
         titles: [],
         userInfo: {},
-        defaultTime: ''
+        defaultTime: '',
+        againData: [],
+        dialogVisible: false
       }
     },
     created() {
@@ -55,7 +73,14 @@
         .then((res) => {
           if (res.body.code === 200) {
             const list = JSON.parse(res.body.data)
-            if (list.length && list[0].flag === '1' || list.length && list[0].flag === '2') {
+            let flag = false
+            list.map((item) => {
+              // 已经提交之后的和辅助类的
+              if ((item.flag || item.flag === '3') && item.classify === '1') {
+                flag = true
+              }
+            })
+            if (flag) {
               alert("已经编辑过下月计划")
               history.go(-1)
             }
@@ -104,6 +129,39 @@
           month = month + 1
         }
         return month
+      },
+      again() {
+        const data = []
+        const info = JSON.parse(JSON.stringify(this.monList))
+        info.map((item) => {
+          item.list.map((subItem, index) => {
+            if (subItem.time) {
+              data.push(item)
+            }
+          })
+        })
+        data.map((item, index) => {
+          const list = []
+          item.list.map((subItem) => {
+            if (subItem.time) {
+              list.push(subItem)
+            }
+          })
+          item.list = list
+        })
+        const filter = []
+        let str = ''
+        data.map((item) => {
+          if (str.indexOf(item.title) === -1) {
+            filter.push(item)
+            str+=item.title
+          }
+        })
+        filter.map((item, index) => {
+          this.modalActiveNames.push(index)
+        })
+        this.againData = filter
+        this.dialogVisible = true
       },
       submit() {
         let all = []

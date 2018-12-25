@@ -40,10 +40,12 @@
     data() {
       return {
         tableData: [],
-        ajaxData: []
+        ajaxData: [],
+        userInfo: {}
       }
     },
     created() {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.init();
     },
     filters: {
@@ -104,9 +106,12 @@
         return month
       },
       handleData() {
+        console.log(this.ajaxData)
         const list = []
         this.ajaxData.map((item) => {
           if (item.classify === '1') {
+            list.push(item)
+          } else if (item.classify === '3') {
             list.push(item)
           }
         })
@@ -159,7 +164,8 @@
       init() {
         let params = {
           // month: this.nextMonth()  todo
-          month: new Date().getMonth() + 1
+          month: new Date().getMonth() + 1,
+          classify: 1
         }
         this.$http.get('http://112.74.55.229:8090/bc/showpeopleallplan.xhtml', {params: params})
         .then((res) => {

@@ -1,6 +1,7 @@
 <template>
   <div class="login">
     <p class="title">三宝巡维中心设备主人管理</p>
+    <img class="bg" src="../assets/login.png" alt="">
     <el-form class="form" ref="form" :model="form" label-width="80px">
       <el-form-item label="班组选择">
         <el-select class="item" v-model="form.group" placeholder="请选择" @change="changeClass">
@@ -43,7 +44,8 @@
         }],
         userNames: [],
         userInfo: {},
-        ajaxFg: false
+        ajaxFg: false,
+        scoreList: []
       }
     },
     created() {
@@ -52,12 +54,51 @@
         this.getToday()
       }
       this.changeClass()
+      this.serchLastMonScore()
     },
     methods: {
+      // 每月月初插入基础分数据
+      insertValue() {
+        const all = []
+        this.scoreList.map((item, index) => {
+          let params = {
+            id: item.id,
+            addscore: 0,
+            totalvalue: item.totalvalue,
+            month: new Date().getMonth() + 1
+          }
+          let name = this.$http.get('http://112.74.55.229:8090/bc/insertvalueuser.xhtml', {params: params})
+          all.push(name)
+        })
+        Promise.all(all).then((res) => {
+          this.getToday()
+        })
+      },
+      serchLastMonScore() {
+        let params = {
+          month: this.lastMon(),
+          id: 1
+        }
+        this.$http.get('http://112.74.55.229:8090/bc/getalluseraddvalue.xhtml', {params: params})
+        .then((res) => {
+          if (res.body.code === 200) {
+            this.scoreList = JSON.parse(res.body.data)
+            this.insertValue()
+          }
+        })
+      },
+      lastMon() {
+        const month = new Date().getMonth() + 1
+        if (month === 1) {
+          return 12
+        } else {
+          return month - 1
+        }
+      },
       init() {
         if (localStorage.getItem('userInfo')) {
           this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-          if (this.userInfo.uid === 1) {
+          if (this.userInfo.uid === '1') {
             this.$router.push({name: 'adminIndex'})
             } else {
             this.$router.push({name: 'index'})
@@ -135,8 +176,17 @@
 
 
 <style scoped>
+  .bg {
+    position: fixed;
+    top: 8%;
+    left: 8%;
+    width: 400px;
+    z-index: -1; 
+  }
+
   .title {
     margin: 180px;
+    font-size: 18px;
     text-align: center;
   }
   

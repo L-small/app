@@ -61,7 +61,7 @@
         },
         handleData() {
           this.ajaxData.map((item) => {
-            if (item.classify === '1') {
+            if (item.classify === '2') {
               this.details.push(item)
             }
           })

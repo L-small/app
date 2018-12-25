@@ -1,8 +1,14 @@
 <template>
   <div class="score">
     <div class="money">
+      <p class="title">月份</p>
+      <el-date-picker
+        v-model="time"
+        type="month"
+        placeholder="选择月">
+      </el-date-picker>
       <p class="title">中心全部30%绩效金额总和</p>
-      <el-input placeholder="请输入绩效金额总和" class="money-input" v-model="allMoney"></el-input>
+      <el-input type="number" placeholder="请输入绩效金额总和" class="money-input" v-model="allMoney"></el-input>
     </div>
     <el-table :data="tableData" stripe style="width: 100%">
       <el-table-column type="index" label="序号" width="80">
@@ -35,14 +41,30 @@
         allMoney: '',
         userInfo: '',
         ajaxData: [],
-        ajaxFg: false
+        ajaxFg: false,
+        time: ''
       }
     },
     created() {
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.getData()
+      this.time = this.lastMon()
     },
     methods: {
+      lastMon() {
+        const date = new Date()
+        const y = date.getFullYear()
+        const d = date.getDay()
+        const h = date.getHours()
+        const min = date.getMinutes()
+        const s = date.getSeconds()
+        const month = new Date().getMonth() + 1
+        if (month === 1) {
+          return `${y}-${12}-${d} ${h}:${min}:${s}`
+        } else {
+        return `${y}-${month - 1}-${d} ${h}:${min}:${s}`
+        }
+      },
       submit() {
         if (this.ajaxFg) {
           return
@@ -51,7 +73,7 @@
         const list = []
         this.tableData.map((item, index) => {
           let params = {
-            month: new Date().getMonth() + 1,
+            month: new Date(this.time).getMonth() + 1,
             id: item.id,
             score30: this.allMoney
           }

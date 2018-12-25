@@ -22,22 +22,33 @@
     <el-table :data="tableData" stripe style="width: 100%">
       <el-table-column prop="substationname" label="变电站名称" width="65">
       </el-table-column>
-      <el-table-column prop="devicemanager" label="设备名称" width="120">
-      </el-table-column>
-      <el-table-column label="设备主人A角" width="120">
+      <el-table-column label="设备名称" width="150">
         <template slot-scope="scope">
-          <el-select class="item" v-model="userNameA" filterable placeholder="请选择">
-            <el-option v-for="item in userNames" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
+          <el-input class="item" type="textarea" v-model="deviceName" placeholder="请输入"></el-input>
         </template>
       </el-table-column>
-      <el-table-column label="设备主人B角" width="120">
+      <el-table-column label="设备主人A角" width="100">
         <template slot-scope="scope">
-          <el-select class="item" v-model="userNameB" filterable placeholder="请选择">
-            <el-option v-for="item in userNames" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
+          <el-select v-model="userNameA" placeholder="请选择">
+            <el-option
+              v-for="(item, index) in userNames"
+              :key="index"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="设备主人B角" width="100">
+        <template slot-scope="scope">
+          <el-select v-model="userNameB" placeholder="请选择">
+            <el-option
+              v-for="(item, index) in userNames"
+              :key="index"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column prop="class" label="所在班组" width="60">
@@ -79,33 +90,15 @@
         tableData: [],
         userNameA: '',
         userNameB: '',
-        userNames: [{
-          value: '1',
-          label: '田金周'
-        }, {
-          value: '王金斌',
-          label: '王金斌'
-        }, {
-          value: '刘钢',
-          label: '刘钢'
-        }, {
-          value: '孙琼仙',
-          label: '孙琼仙'
-        }, {
-          value: '马锦波',
-          label: '马锦波'
-        }, {
-          value: '陈娟2',
-          label: '陈娟2'
-        }, {
-          value: '2',
-          label: '吴鑫'
-        }],
-        ajaxFlag: false
+        userNames: [],
+        ajaxFlag: false,
+        deviceName: ''
       }
     },
     created() {
       this.tableData.push(JSON.parse(this.$route.params.info))
+      this.deviceName = this.tableData[0].devicemanager
+      this.getUser()
     },
     filters: {
       filterClass() {
@@ -113,8 +106,19 @@
       }
     },
     methods: {
-      handleData() {
-
+      getUser() {
+        this.$http.get('http://112.74.55.229:8090/bc/getalluser.xhtml')
+        .then((res) => {
+          if (res.body.code === 200) {
+            this.userNames = JSON.parse(res.body.data)
+          } else {
+            alert("请求失败")
+          }
+        })
+        .catch((err) => {
+          alert("请求失败")
+          console.log(err)
+        })
       },
       change() {
         if (this.ajaxFlag) {
@@ -135,7 +139,12 @@
           userid: this.userNameB
         }
         const second = this.$http.get('http://112.74.55.229:8090/bc/changedevice.xhtml', {params: secondParams})
-        Promise.all([first, second]).then((res) => {
+        let thirdParams = {
+          id: this.tableData[0].id,
+          devicemanager: this.deviceName
+        }
+        const third = this.$http.get('http://112.74.55.229:8090/bc/changedevicem.xhtml', {params: thirdParams})
+        Promise.all([first, second, third]).then((res) => {
           let alertFg = false
           res.map((item) => {
             if (item.body.code !== 200) {

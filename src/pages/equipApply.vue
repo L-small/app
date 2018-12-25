@@ -30,7 +30,7 @@
       </el-table-column>
     </el-table>
     <div class="notify">
-      <el-button type="success" @click="change">确认变更</el-button>
+      <el-button @click="change">确认变更</el-button>
     </div>
   </div>
 </template>

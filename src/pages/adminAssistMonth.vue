@@ -40,10 +40,12 @@
     data() {
       return {
         tableData: [],
-        ajaxData: []
+        ajaxData: [],
+        userInfo: {}
       }
     },
     created() {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.init();
     },
     filters: {
@@ -125,13 +127,16 @@
         this.ajaxData.map((item) => {
           if (item.classify === '2') {
             list.push(item)
+          } else if (item.classify === '3') {
+            list.push(item)
           }
         })
         this.tableData = list
       },
       init() {
         let params = {
-          month: new Date().getMonth() + 1
+          month: new Date().getMonth() + 1,
+          classify: 2
           // month: this.nextMonth() todo
         }
         this.$http.get('http://112.74.55.229:8090/bc/showpeopleallplan.xhtml', {params: params})
@@ -149,7 +154,7 @@
         })
       },
       toApproval(item) {
-        this.$router.push({name: 'adminMonDetail', params: {planUser: item.userid}})
+        this.$router.push({name: 'adminAssistMonDetail', params: {planUser: item.userid}})
       }
     },
     components: {

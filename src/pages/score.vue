@@ -18,7 +18,7 @@
       </el-table-column>
       <el-table-column prop="actual" label="实际分配所得">
         <template slot-scope="{row,$index}">
-          <p>{{parseFloat(row.actual).toFixed(2)}}</p>
+          <p>{{row.actual ? parseFloat(row.actual).toFixed(2) : ''}}</p>
         </template>
       </el-table-column>
       <!-- <el-table-column prop="diff" label="差额">

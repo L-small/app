@@ -4,6 +4,7 @@
       <li v-for="(item, index) in todayList" :key="index">
         <div class="item">
           <p class="dimension">{{item.dimension}}</p>
+          <p class="time">计划时间：{{item.time}}</p>
           <p>（{{item.require | filterRequire}}）{{item.job}}</p>
         </div>
         <el-button class="btn" @click="toSubmit(item)">提交</el-button>
@@ -64,17 +65,15 @@ export default {
       this.todayList = list
     },
     initData() {
-      const params = {
-        id: this.userInfo.id
+      let params = {
+        id: this.userInfo.id,
+        month: new Date().getMonth() + 1
       }
-      this.$http.get('http://112.74.55.229:8090/bc/showpeopleplantoday.xhtml', {params: params})
+      this.$http.get('http://112.74.55.229:8090/bc/showpeopleplan.xhtml', {params: params})
       .then((res) => {
         if (res.body.code === 200) {
           this.ajaxData = JSON.parse(res.body.data)
           this.handleData()
-        } else {
-          this.successFg = false
-          alert(res.body.msg)
         }
       })
       .catch((err) => {
@@ -105,6 +104,12 @@ li {
 }
 li .item {
   display: block;
+}
+.item .time {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 5px;
+  padding-left: 8px;
 }
 .item .dimension {
   margin-bottom: 8px;
