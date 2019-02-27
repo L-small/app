@@ -1,16 +1,22 @@
 <template>
-  <div class="score">
+  <div class="admin-score">
+    <Header :title="'设定绩效'"></Header>
     <div class="money">
-      <p class="title">月份</p>
-      <el-date-picker
-        v-model="time"
-        type="month"
-        placeholder="选择月">
-      </el-date-picker>
-      <p class="title">中心全部30%绩效金额总和</p>
-      <el-input type="number" placeholder="请输入绩效金额总和" class="money-input" v-model="allMoney"></el-input>
+      <div class="month">
+        <p class="title">月份</p>
+        <el-date-picker
+          class="picker"
+          v-model="time"
+          type="month"
+          placeholder="选择月">
+        </el-date-picker>
+      </div>
+      <div class="count">
+        <p class="title">中心全部30%绩效金额总和</p>
+        <el-input type="number" placeholder="请输入绩效金额总和" class="money-input" v-model="allMoney"></el-input>
+      </div>
     </div>
-    <el-table :data="tableData" stripe style="width: 100%">
+    <el-table class="table" :data="tableData" stripe style="width: 100%">
       <el-table-column type="index" label="序号" width="80">
       </el-table-column>
       <el-table-column prop="name" label="姓名" width="120">
@@ -33,6 +39,7 @@
 </template>
 
 <script>
+  import Header from '../components/Header.vue'
   export default {
     name: 'index',
     data() {
@@ -95,15 +102,15 @@
             failFg = true
           }
           if (failFg) {
-            alert('提交失败')
+            this.$message('提交失败')
           } else {
-            alert('提交成功')
+            this.$message('提交成功')
             history.go(-1)
           }
         })
         .catch((err) => {
           this.ajaxFg = false
-          alert('提交失败')
+          this.$message('提交失败')
         })
       },
       handleData() {
@@ -125,28 +132,46 @@
             this.ajaxData = JSON.parse(res.body.data)
             this.handleData()
           } else {
-            alert("请求失败")
+            this.$message('请求失败')
           }
         })
         .catch((err) => {
-          alert("请求失败")
+          this.$message('请求失败')
           console.log(err)
         })
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
 <style scoped>
+  .admin-score {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
   .money {
     width: 75%;
     margin: 20px auto;
+    padding-top: 20px;
     display: flex;
     justify-content: space-around;
     align-items: center;
+  }
+  .money .month,.money .count {
+    display: flex;
+    align-items: center;
+  }
+  .money .count {
+    margin-left: 20px;
+  }
+  .money .month .title {
+    width: 40px;
+  }
+  .money .count .title {
+    width: 100px;
   }
   .title {
     font-size: 14px;
@@ -154,7 +179,7 @@
     margin-right: 10px;
   }
   .money-input {
-    width: 220px;
+    width: 190px;
   }
   .footer {
     position: fixed;
@@ -172,4 +197,21 @@
     color: #fff;
     background: #50a095;
   }
+</style>
+<style>
+@media screen and (max-width: 700px) {
+  .admin-score .money {
+    display: block;
+  }
+  .admin-score .month .picker {
+    width: 220px
+  }
+  .admin-score .money .count {
+    margin-top: 10px;
+    margin-left: 0px;
+  }
+  .admin-score .table {
+    font-size: 12px;
+  }
+}
 </style>

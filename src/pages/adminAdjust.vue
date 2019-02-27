@@ -1,6 +1,7 @@
 <template>
-  <div class="list">
-    <el-table :data="tableData" stripe style="width: 100%">
+  <div class="admin-adjust">
+    <Header :title="'设备调整'"></Header>
+    <el-table class="table" :data="tableData" stripe style="width: 100%">
       <el-table-column type="index" label="序号" width="35">
       </el-table-column>
       <el-table-column prop="substationname" label="变电站名称" width="70">
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+  import Header from '../components/Header.vue'
   export default {
     name: 'login',
     data() {
@@ -78,18 +80,31 @@
             this.ajaxData = JSON.parse(res.body.data)
             this.handleData()
           } else {
-            alert("请求失败")
+            this.$message('请求失败')
           }
         })
         .catch((err) => {
-          alert("请求失败")
+          this.$message('请求失败');
           console.log(err)
         })
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
+<style>
+.admin-adjust {
+  margin-top: 50px;
+}
+@media screen and (max-width: 700px) {
+  .admin-adjust .table{
+    font-size: 12px;
+  }
+  .admin-adjust .cell .el-button {
+    font-size: 12px;
+  }
+}
+</style>

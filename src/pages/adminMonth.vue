@@ -1,6 +1,7 @@
 <template>
-  <div class="list">
-    <el-table :data="tableData" stripe style="width: 100%">
+  <div class="admin-mon">
+    <Header :title="'审批月计划（生产类）'"></Header>
+    <el-table class="table" :data="tableData" stripe style="width: 100%">
       <el-table-column type="index" label="序号">
       </el-table-column>
       <el-table-column prop="name" label="姓名">
@@ -13,7 +14,7 @@
       <el-table-column prop="option" label="操作">
         <template slot-scope="scope">
           <!-- <el-button v-if="!scope.row.flag" @click="notify(scope.row)">提醒</el-button> -->
-          <el-button v-if="scope.row.flag === '1'" @click="toApproval(scope.row)">审批</el-button>
+          <el-button class="btn" v-if="scope.row.flag === '1'" @click="toApproval(scope.row)">审批</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -24,6 +25,9 @@
 </template>
 
 <style scoped>
+.admin-mon {
+  margin-top: 50px;
+}
   .notify {
     margin-top: 40px;
     text-align: center;
@@ -33,8 +37,20 @@
     background: #50a095;
   }
 </style>
+<style>
+@media screen and (max-width: 700px) {
+  .admin-mon .table {
+    font-size: 12px;
+  }
+  .admin-mon .btn {
+    font-size: 12px;
+  }
+}
+</style>
+
 
 <script>
+  import Header from '../components/Header.vue'
   export default {
     name: 'login',
     data() {
@@ -92,7 +108,7 @@
             if (item.list.length > 1) {
               this.remove(item.list, subIndex)
             }
-            alert('成功');
+            this.$message('成功')
           }
         })
       },
@@ -151,14 +167,14 @@
             failFg = true
           }
           if (failFg) {
-            alert('提交失败')
+            this.$message('提交失败')
           } else {
-            alert('提交成功')
+            this.$message('提交成功')
             history.go(-1)
           }
         })
         .catch(() => {
-          alert('提交失败')
+          this.$message('提交失败')
         })
       },
       init() {
@@ -183,7 +199,7 @@
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>

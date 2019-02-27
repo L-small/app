@@ -1,8 +1,10 @@
 <template>
-  <div class="score">
+  <div class="admin-mon-score-list">
+    <Header :title="'查看月度得分'"></Header>
     <div class="condition">
       <p class="title">选择日期：</p>
       <el-date-picker
+        class="picker"
         v-model="time"
         type="month"
         placeholder="选择月">
@@ -11,7 +13,7 @@
     <div class="button">
       <el-button class="btn" @click="getData">查询</el-button>
     </div>
-    <el-table :data="tableData" stripe style="width: 100%">
+    <el-table class="table" :data="tableData" stripe style="width: 100%">
       <el-table-column prop="name" label="姓名" width="80">
       </el-table-column>
       <el-table-column prop="totalvalue" label="基础分">
@@ -35,6 +37,7 @@
 </template>
 
 <script>
+  import Header from '../components/Header.vue'
   export default {
     name: 'score',
     data() {
@@ -80,7 +83,7 @@
           if (res.body.code === 200) {
             this.tableData = JSON.parse(res.body.data)
           } else {
-            alert(res.msg)
+            this.$message(res.msg)
           }
         })
         .catch((err) => {
@@ -89,14 +92,17 @@
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
 <style scoped>
+.admin-mon-score-list {
+  margin-top: 50px;
+}
 .condition {
-  margin-top: 20px;
+  padding-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -113,5 +119,18 @@
   width: 200px;
   color: #fff;
   background: #50a095;
+}
+</style>
+<style>
+@media screen and (max-width: 700px) {
+  .admin-mon-score-list .condition .title {
+    font-size: 12px;
+  }
+  .admin-mon-score-list .picker {
+    font-size: 12px;
+  }
+  .admin-mon-score-list .table{
+    font-size: 12px;
+  }
 }
 </style>

@@ -1,6 +1,7 @@
   <template>
-    <div class="admin-mon-detail">
-      <el-table :data="details" stripe>
+    <div class="admin-ass-mon-detail">
+      <Header :title="'计划详情'"></Header>
+      <el-table class="table" :data="details" stripe>
         <el-table-column type="index" label="序号" width="80">
         </el-table-column>
         <el-table-column label="工作内容">
@@ -19,6 +20,7 @@
   </template>
 
   <script>
+    import Header from '../components/Header.vue'
     export default {
       data() {
         return {
@@ -51,11 +53,11 @@
               this.ajaxData = JSON.parse(res.body.data)
               this.handleData()
             } else {
-              alert("请求失败")
+              this.$message('请求失败')
             }
           })
           .catch((err) => {
-            alert("请求失败")
+            this.$message('请求失败')
             console.log(err)
           })
         },
@@ -110,22 +112,28 @@
               failFg = true
             }
             if (failFg) {
-              alert('提交失败')
+              this.$message('提交失败')
             } else {
-              alert('提交成功')
+              this.$message('提交成功')
               history.go(-1)
             }
           })
           .catch(() => {
             this.ajaxFg = false
-            alert('提交失败')
+            this.$message('提交失败')
           })
         },
+      },
+      components: {
+        Header
       }
     }
   </script>
 
   <style scoped>
+  .admin-ass-mon-detail {
+    margin-top: 50px;
+  }
     .admin-mon-detail {
       padding: 15px;
       background: #fff;
@@ -169,4 +177,13 @@
       width: 150px;
     }
   </style>
-  
+  <style>
+  @media screen and (max-width: 700px) {
+    .admin-ass-mon-detail .table {
+      font-size: 12px;
+    }
+    .admin-ass-mon-detail .btn {
+      font-size: 12px;
+    }
+  }
+  </style>

@@ -1,5 +1,6 @@
 <template>
-  <div class="month">
+  <div class="ass-month">
+    <Header :title="'个人计划编辑'"></Header>
     <el-collapse v-model="activeNames" style="width:100%;">
       <el-collapse-item :title="`${item.title}`" :name="index" v-for="(item, index) in monList">
         <div class="item" v-for="subItem in item.list">
@@ -31,6 +32,7 @@
 </template>
 
 <script>
+import Header from '../components/Header'
   export default {
     data() {
       return {
@@ -81,7 +83,7 @@
               }
             })
             if (flag) {
-              alert("已经编辑过下月计划")
+              this.$message('已经编辑过下月计划')
               history.go(-1)
             }
           }
@@ -197,14 +199,14 @@
             failFg = true
           }
           if (failFg) {
-            alert('提交失败')
+            this.$message('提交失败')
           } else {
-            alert('提交成功')
+            this.$message('提交成功')
             history.go(-1)
           }
         })
         .catch(() => {
-          alert('提交失败')
+          this.$message('提交失败')
         })
       },
       handleData() {
@@ -247,26 +249,38 @@
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 <style>
-  .month .el-collapse-item__header {
+  .ass-month .el-collapse-item__header {
     padding-left: 15px;
     color: #fff;
     background: #50a095;
   }
-  .month .el-collapse-item__content {
+  .ass-month .el-collapse-item__content {
     padding: 15px;
   }
-  .month .el-date-editor  {
+  .ass-month .el-date-editor  {
     width: 170px;
     margin-left: 10px;
+  }
+   @media screen and (max-width: 700px) {
+    .ass-month .el-collapse-item__content {
+      font-size: 12px;
+    }
+    .ass-month .picker {
+      font-size: 12px;
+    }
   }
 </style>
 
 <style scoped>
+  .ass-month {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
   .item {
     display: flex;
     margin-bottom: 10px;

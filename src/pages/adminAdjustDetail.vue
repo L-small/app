@@ -1,7 +1,8 @@
 <template>
-  <div class="list">
+  <div class="admin-adjust-detail">
+    <Header :title="'设备调整详情'"></Header>
     <p class="title">原设备信息</p>
-    <el-table :data="tableData" stripe style="width: 100%">
+    <el-table class="table" :data="tableData" stripe style="width: 100%">
       <el-table-column prop="substationname" label="变电站名称" width="65">
       </el-table-column>
       <el-table-column prop="devicemanager" label="设备名称" width="120">
@@ -19,7 +20,7 @@
       </el-table-column>
     </el-table>
     <p class="title">调整为</p>
-    <el-table :data="tableData" stripe style="width: 100%">
+    <el-table class="table" :data="tableData" stripe style="width: 100%">
       <el-table-column prop="substationname" label="变电站名称" width="65">
       </el-table-column>
       <el-table-column label="设备名称" width="150">
@@ -66,6 +67,9 @@
 </template>
 
 <style scoped>
+.admin-adjust-detail {
+  margin-top: 50px;
+}
   .title {
     margin-top: 25px;
     font-size: 18px;
@@ -73,7 +77,8 @@
     color: #50a095;
   }
   .notify {
-    margin-top: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     text-align: center;
   }
   .notify .btn {
@@ -83,6 +88,7 @@
 </style>
 
 <script>
+  import Header from '../components/Header.vue'
   export default {
     name: 'login',
     data() {
@@ -112,11 +118,11 @@
           if (res.body.code === 200) {
             this.userNames = JSON.parse(res.body.data)
           } else {
-            alert("请求失败")
+            this.$message('请求失败');
           }
         })
         .catch((err) => {
-          alert("请求失败")
+          this.$message('请求失败');
           console.log(err)
         })
       },
@@ -153,22 +159,38 @@
           })
           if (alertFg) {
             this.ajaxFlag = false
-            alert('修改失败')
+            this.$message('修改失败');
           } else {
             this.ajaxFlag = false
-            alert('修改成功')
+            this.$message('修改成功');
             history.go(-1)
           }
         })
         .catch((err) => {
           this.ajaxFlag = false
-          alert("修改失败")
+          this.$message('修改失败');
         })
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
+<style>
+@media screen and (max-width: 700px) {
+  .admin-adjust-detail .table{
+    font-size: 12px;
+  }
+  .admin-adjust-detail .title {
+    font-size: 14px;
+  }
+  .admin-adjust-detail .el-textarea__inner {
+    font-size: 12px;
+  }
+  .admin-adjust-detail .el-input__inner {
+    font-size: 12px;
+  }
+}
+</style>

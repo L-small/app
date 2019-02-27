@@ -1,6 +1,7 @@
 <template>
   <div class="month">
-    <el-collapse v-model="activeNames" style="width:100%;">
+    <Header :title="'个人计划编辑'"></Header>
+    <el-collapse class="list" v-model="activeNames" style="width:100%;">
       <el-collapse-item :title="`${item.title}`" :name="index" v-for="(item, index) in monList">
         <div class="item" v-for="subItem in item.list">
           <p class="name">（{{subItem.require | filterRequire}}）{{subItem.job}}</p>
@@ -10,7 +11,7 @@
       </el-collapse-item>
     </el-collapse>
     <el-dialog title="再次确认" :visible.sync="dialogVisible" center fullscreen>
-      <el-collapse v-model="modalActiveNames" style="width:100%;">
+      <el-collapse class="list" v-model="modalActiveNames" style="width:100%;">
         <el-collapse-item :title="`${item.title}`" :name="index" v-for="(item, index) in againData">
           <div class="item" v-for="subItem in item.list">
             <p class="name">（{{subItem.require | filterRequire}}）{{subItem.job}}</p>
@@ -31,6 +32,7 @@
 </template>
 
 <script>
+import Header from '../components/Header'
   export default {
     data() {
       return {
@@ -81,7 +83,7 @@
               }
             })
             if (flag) {
-              alert("已经编辑过下月计划")
+              this.$message("已经编辑过下月计划")
               history.go(-1)
             }
           }
@@ -197,14 +199,14 @@
             failFg = true
           }
           if (failFg) {
-            alert('提交失败')
+            this.$message("提交失败")
           } else {
-            alert('提交成功')
+            this.$message("提交成功")
             history.go(-1)
           }
         })
         .catch(() => {
-          alert('提交失败')
+          this.$message("提交失败")
         })
       },
       handleData() {
@@ -247,11 +249,19 @@
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 <style>
+  .el-collapse-item__arrow {
+    position: absolute;
+    margin-right: 0px;
+    right: 18px;
+  }
+  .el-collapse-item__header {
+    position: relative;
+  }
   .month .el-collapse-item__header {
     padding-left: 15px;
     color: #fff;
@@ -264,9 +274,25 @@
     width: 170px;
     margin-left: 10px;
   }
+
+  @media screen and (max-width: 700px) {
+    .month .list p {
+      font-size: 12px;
+    }
+    .month .list .item {
+      font-size: 12px;
+    }
+    .month .list .el-input__inner {
+      font-size: 12px;
+    }
+  }
 </style>
 
 <style scoped>
+  .month {
+    margin-bottom: 50px;
+    margin-top: 50px;
+  }
   .item {
     display: flex;
     margin-bottom: 10px;
@@ -297,4 +323,5 @@
     background: #50a095;
     color: #fff;
   }
+
 </style>

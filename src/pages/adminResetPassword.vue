@@ -1,6 +1,7 @@
 <template>
-  <div class="reset-table">
-    <el-table :data="tableData" stripe style="width: 100%">
+  <div class="admin-reset-pass">
+    <Header :title="'重置用户密码'"></Header>
+    <el-table class="table" :data="tableData" stripe style="width: 100%">
       <el-table-column type="index" label="序号" width="80">
       </el-table-column>
       <el-table-column prop="name" label="姓名" width="120">
@@ -20,6 +21,7 @@
 </template>
 
 <script>
+  import Header from '../components/Header.vue'
   export default {
     name: 'index',
     data() {
@@ -47,14 +49,14 @@
         .then((res) => {
           this.ajaxFg = false
           if (res.body.code === 200) {
-            alert('重置成功')
+            this.$message('重置成功')
           } else {
-            alert("重置失败")
+            this.$message('重置失败')
           }
         })
         .catch((err) => {
           this.ajaxFg = false
-          alert("重置失败")
+          this.$message('重置失败')
         })
       },
       getData() {
@@ -63,20 +65,31 @@
           if (res.body.code === 200) {
             this.tableData = JSON.parse(res.body.data)
           } else {
-            alert("请求失败")
+            this.$message('请求失败')
           }
         })
         .catch((err) => {
-          alert("请求失败")
+          this.$message('请求失败')
           console.log(err)
         })
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
-<style scoped>
+<style>
+.admin-reset-pass {
+  margin-top: 50px;
+}
+@media screen and (max-width: 700px) {
+  .admin-reset-pass .table {
+    font-size: 12px;
+  }
+  .admin-reset-pass .el-button {
+    font-size: 12px;
+  }
+}
 </style>

@@ -1,6 +1,7 @@
 <template>
-  <div class="score">
-    <el-table :data="tableData" stripe style="width: 100%">
+  <div class="admin-mon-score">
+    <Header :title="'设定月度得分'"></Header>
+    <el-table class="table" :data="tableData" stripe style="width: 100%">
       <el-table-column type="index" label="序号" width="50">
       </el-table-column>
       <el-table-column prop="name" label="姓名" width="80">
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+  import Header from '../components/Header.vue'
   export default {
     name: 'index',
     data() {
@@ -80,14 +82,14 @@
             failFg = true
           }
           if (failFg) {
-            alert('提交失败')
+            this.$message('提交失败')
           } else {
-            alert('提交成功')
+            this.$message('提交成功')
             history.go(-1)
           }
         })
         .catch((err) => {
-          alert('提交失败')
+          this.$message('提交失败')
         })
       },
       handleData() {
@@ -117,7 +119,7 @@
             this.ajaxData = JSON.parse(res.body.data)
             this.handleData()
           } else {
-            alert(res.msg)
+            this.$message(res.msg)
           }
         })
         .catch((err) => {
@@ -126,12 +128,15 @@
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
 <style scoped>
+.admin-mon-score {
+  margin-top: 50px;
+}
   .footer {
     position: fixed;
     bottom: 0;
@@ -148,4 +153,14 @@
     color: #fff;
     background: #50a095;
   }
+  .admin-mon-score {
+    margin-bottom: 50px;
+  }
+</style>
+<style>
+@media screen and (max-width: 700px) {
+  .admin-mon-score .table{
+    font-size: 12px;
+  }
+}
 </style>

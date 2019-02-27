@@ -1,32 +1,36 @@
 <template>
-  <div class="submit">
-    <ul>
-      <li class="name">
-        <label class="label" for="">任务名：</label>
-        <p>{{info.job}}</p>
-      </li>
-      <li>
-        <label class="label" for="">描述：</label>
-        <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 10}" placeholder="请输入内容" v-model="desc">
-        </el-input>
-      </li>
-      <li>
-        <label class="label">上传图片或附件：</label>
-        <el-upload action="http://112.74.55.229:8090/bc/FileUploadServlet" list-type="picture-card" :on-success="uploadSucc" :on-error="uploadErr" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
-          <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="imgUrl" alt="">
-        </el-dialog>
-      </li>
-    </ul>
-    <div class="footer">
-      <el-button class="btn" type="success" @click="submit">确认提交</el-button>
+  <div>
+    <Header :title="'提交计划'"></Header>
+    <div class="submit">
+      <ul>
+        <li class="name">
+          <label class="label" for="">任务名：</label>
+          <p>{{info.job}}</p>
+        </li>
+        <li>
+          <label class="label" for="">描述：</label>
+          <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 10}" placeholder="请输入内容" v-model="desc">
+          </el-input>
+        </li>
+        <li>
+          <label class="label">上传图片或附件：</label>
+          <el-upload action="http://112.74.55.229:8090/bc/FileUploadServlet" list-type="picture-card" :on-success="uploadSucc" :on-error="uploadErr" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="imgUrl" alt="">
+          </el-dialog>
+        </li>
+      </ul>
+      <div class="footer">
+        <el-button class="btn" type="success" @click="submit">确认提交</el-button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Header from '../components/Header'
   export default {
     data() {
       return {
@@ -81,10 +85,10 @@
         this.$http.get('http://112.74.55.229:8090/bc/commitpeopleplan.xhtml', {params: params})
         .then((res) => {
           if (res.body.code === 200) {
-            alert("提交成功")
+            this.$message("提交成功")
             history.go(-1)
           } else {
-            alert(res.msg)
+            this.$message(res.msg)
           }
         })
       },
@@ -93,13 +97,14 @@
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
 <style scoped>
   .submit {
+    margin-top: 50px;
     padding: 15px;
   }
   ul {
@@ -142,4 +147,15 @@
     color: #fff;
     background: #50a095;
   }
+  @media screen and (max-width: 700px) {
+  .submit ul li{
+    font-size: 12px;
+  }
+  .submit .name p {
+    margin-left: 55px;
+  }
+  .submit .label {
+    font-size: 13px;
+  }
+}
 </style>

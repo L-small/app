@@ -1,5 +1,6 @@
 <template>
   <div class="admin-today">
+    <Header :title="'审批计划'"></Header>
     <el-collapse v-model="activeNames" @change="handleChange">
       <p class="business"><i class="el-icon-edit"></i>&nbsp;生产类</p>
       <el-collapse-item v-for="(item, index) in prodLists" class="col" :title="item.name" :name="index * 2 + 1">
@@ -16,8 +17,8 @@
             </div>
           </div>
           <div class="option">
-            <el-button @click="submit(item, index, subItem, subIndex, 8)">驳回</el-button>
-            <el-button type="success" @click="submit(item, index, subItem, subIndex, 7)">确认完成</el-button>
+            <el-button class="btn" @click="submit(item, index, subItem, subIndex, 8)">驳回</el-button>
+            <el-button class="btn" type="success" @click="submit(item, index, subItem, subIndex, 7)">确认完成</el-button>
           </div>
         </div>
       </el-collapse-item>
@@ -36,8 +37,8 @@
             </div>
           </div>
           <div class="option">
-            <el-button @click="submit(item, index, subItem, subIndex, 8)">驳回</el-button>
-            <el-button type="success" @click="submit(item, index, subItem, subIndex, 7)">确认完成</el-button>
+            <el-button class="btn" @click="submit(item, index, subItem, subIndex, 8)">驳回</el-button>
+            <el-button class="btn" type="success" @click="submit(item, index, subItem, subIndex, 7)">确认完成</el-button>
           </div>
         </div>
       </el-collapse-item>
@@ -50,17 +51,40 @@
   font-size: 14px;
   padding-left: 15px;
 }
+@media screen and (max-width: 700px) {
+  .admin-today .el-collapse-item__header{
+    font-size: 13px;
+  }
+  .admin-today .business {
+    font-size: 14px;
+  }
+  .admin-today .submit-all .btn {
+    font-size: 12px;
+  }
+  .admin-today .item {
+    font-size: 12px;
+  }
+  .admin-today .option .btn {
+    font-size: 12px;
+  }
+}
 </style>
 
 <style scoped>
+.admin-today {
+  margin-top: 50px;
+}
 .business {
   width: 100%;
   height: 45px;
-  padding-left: 10px;
+  /* padding-left: 10px; */
   line-height: 45px;
   font-size: 14px;
   color: #fff;
   background: #50a095;
+}
+.business i {
+  margin-left: 10px;
 }
 .item {
   padding: 20px;
@@ -68,7 +92,7 @@
 
 .label, .type, .desc, .img {
   margin-top: 0px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 .label {
   font-size: 14px;
@@ -106,6 +130,7 @@
 
 <script>
   import { ImagePreview } from 'vant';
+  import Header from '../components/Header.vue'
   export default {
     name: 'month',
     data() {
@@ -142,11 +167,11 @@
             this.ajaxData = JSON.parse(res.body.data)
             this.handelData()
           } else {
-            alert("请求失败")
+            this.$message('请求失败')
           }
         })
         .catch((err) => {
-          alert("请求失败")
+          this.$message('请求失败')
           console.log(err)
         })
       },
@@ -252,16 +277,16 @@
             failFg = true
           }
           if (failFg) {
-            alert('提交失败')
+            this.$message('提交失败')
           } else {
-            alert('提交成功')
+            this.$message('提交成功')
             this.$router.go(0)
           }
         })
         .catch((err) => {
           console.log(err)
           this.ajaxFg = false
-          alert('提交失败')
+          this.$message('提交失败')
         })
       },
       submit(item, index, subItem, subIndex, status) {
@@ -288,26 +313,26 @@
             } else {
               this.$router.go(0)
             }
-            alert('成功');
+            this.$message('成功')
           } else {
-            alert("请求失败")
+            this.$message('请求失败')
           }
         })
         .catch((err) => {
           this.ajaxFg = false
           console.log(err)
-          alert("请求失败")
+          this.$message('请求失败')
         })
       },
       showBigImg(item, index) {
         ImagePreview({
-          images: item,
+          images: [`http://112.74.55.229:8090/bc/${item}`],
           startPosition: index,
         });
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>

@@ -1,5 +1,6 @@
 <template>
   <div class="list">
+    <Header :title="'设备调整'"></Header>
     <div>
       <p class="title">原设备信息</p>
     </div>
@@ -36,6 +37,9 @@
 </template>
 
 <style scoped>
+.list {
+  margin-top: 50px;
+}
   .title {
     font-size: 18px;
     text-align: center;
@@ -48,6 +52,7 @@
 </style>
 
 <script>
+  import Header from '../components/Header.vue'
   export default {
     data() {
       return {
@@ -93,12 +98,12 @@
     },
     methods: {
       change() {
-        alert('变更完成')
+        this.$message('变更完成')
         history.go(-1)
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>

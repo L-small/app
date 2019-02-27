@@ -1,5 +1,6 @@
 <template>
   <div class="score">
+    <Header :title="'查看绩效'"></Header>
     <div class="condition">
       <p class="title">选择日期：</p>
       <el-date-picker
@@ -11,7 +12,7 @@
     <div class="button">
       <el-button class="btn" type="success" @click="getData">查询</el-button>
     </div>
-    <el-table :data="tableData" stripe style="width: 100%">
+    <el-table class="table" :data="tableData" stripe style="width: 100%">
       <el-table-column prop="name" label="姓名" width="80">
       </el-table-column>
       <el-table-column prop="30score" label="中心全部30%绩效金额总和">
@@ -28,6 +29,7 @@
 </template>
 
 <script>
+import Header from '../components/Header'
   export default {
     name: 'score',
     data() {
@@ -64,27 +66,30 @@
           if (res.body.code === 200) {
             this.tableData = JSON.parse(res.body.data)
           } else {
-            alert("查询失败")
+            this.$message("查询失败")
           }
         })
         .catch((err) => {
-          alert("查询失败")
+          this.$message('查询失败');
         })
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
 <style scoped>
+.score {
+  margin-top: 50px;
+}
 .title {
   color: #333;
   font-size: 14px;
 }
 .condition {
-  margin-top: 20px;
+  padding-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -98,4 +103,19 @@
   color: #fff;
   background: #50a095;
 }
+
 </style>
+<style>
+@media screen and (max-width: 700px) {
+  .score .condition .title{
+    font-size: 12px;
+  }
+  .score .condition .el-input__inner {
+    font-size: 12px;
+  }
+  .score .table {
+    font-size: 12px;
+  }
+}
+</style>
+

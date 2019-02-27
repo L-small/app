@@ -1,5 +1,6 @@
 <template>
-  <div class="today">
+  <div class="today-list">
+    <Header :title="'提交计划'"></Header>
     <ul v-if="successFg">
       <li v-for="(item, index) in todayList" :key="index">
         <div class="item">
@@ -15,7 +16,7 @@
 </template>
 
 <script>
-
+import Header from '../components/Header'
 export default {
   name: 'app',
   data() {
@@ -77,17 +78,20 @@ export default {
         }
       })
       .catch((err) => {
-        alert(err)
+        this.$message(err)
       })
     }
   },
   components: {
-    
+    Header
   }
 }
 </script>
 
 <style scoped>
+.today-list {
+  margin-top: 60px;
+}
 ul {
   margin: 15px;
   padding: 0;
@@ -114,7 +118,7 @@ li .item {
 .item .dimension {
   margin-bottom: 8px;
   padding-left: 8px;
-  color: #666;
+  color: #000;
 }
 li:after {
   position: absolute;
@@ -129,11 +133,25 @@ li:last-of-type:after {
   display: none;
 }
 .btn {
+  margin-left: 10px;
   color: #fff;
   background: #50a095;
 }
 .tip {
   margin-top: 50px;
   text-align: center;
+}
+</style>
+<style>
+@media screen and (max-width: 700px) {
+  .today-list .item .dimension {
+    font-size: 13px;
+  }
+  .today-list .item {
+    font-size: 12px;
+  }
+  .today-list .btn {
+    font-size: 12px;
+  }
 }
 </style>

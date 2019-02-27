@@ -1,7 +1,6 @@
 <template>
   <div class="login">
     <p class="title">三宝巡维中心设备主人管理</p>
-    <img class="bg" src="../assets/login.png" alt="">
     <el-form class="form" ref="form" :model="form" label-width="80px">
       <el-form-item label="班组选择">
         <el-select class="item" v-model="form.group" placeholder="请选择" @change="changeClass">
@@ -10,7 +9,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="用户名">
-        <el-select class="item" v-model="form.userName" filterable placeholder="请选择" @change="changeUser">
+        <el-select class="item" v-model="form.userName" placeholder="请选择" @change="changeUser">
           <el-option v-for="item in userNames" :key="item" :label="item" :value="item">
           </el-option>
         </el-select>
@@ -60,7 +59,7 @@
       // 每月月初插入基础分数据
       insertValue() {
         const all = []
-        this.scoreList.map((item, index) => {
+        this.scoreList.map((item) => {
           let params = {
             id: item.id,
             addscore: 0,
@@ -70,7 +69,7 @@
           let name = this.$http.get('http://112.74.55.229:8090/bc/insertvalueuser.xhtml', {params: params})
           all.push(name)
         })
-        Promise.all(all).then((res) => {
+        Promise.all(all).then(() => {
           this.getToday()
         })
       },
@@ -139,12 +138,13 @@
               this.$router.push({name: 'index'})
             }
           } else {
-            alert('登录失败')
+            this.$message('登录失败');
           }
         })
         .catch((err) => {
           this.ajaxFg = false
-          alert("登录失败")
+          this.$message('登录失败');
+          console.log(err)
         })
       },
       getToday() {
@@ -156,15 +156,15 @@
           if (res.body.code === 200) {
             const data = JSON.parse(res.body.data)
             if (data.length !== 0) {
-              alert(`您今日有${data.length}条任务待完成`)
+              this.$message(`您今日有${data.length}条任务待完成`);
             }
             this.init()
           } else {
-            alert(res.body.msg)
+            this.$message(res.body.msg);
           }
         })
         .catch((err) => {
-          alert(err)
+          this.$message(err);
         })
       }
     },
@@ -176,6 +176,11 @@
 
 
 <style scoped>
+  .login {
+    background: url('../assets/login.png') no-repeat top;
+    background-position: 50% 10%;
+    background-size: contain;
+  }
   .bg {
     position: fixed;
     top: 8%;
@@ -185,7 +190,8 @@
   }
 
   .title {
-    margin: 180px;
+    padding: 100px 0 40px 0;
+    margin: 0px auto;
     font-size: 18px;
     text-align: center;
   }
@@ -208,5 +214,33 @@
     width: 100%;
     color: #fff;
     background: #50a095;
+  }
+
+  @media screen and (max-width: 700px) {
+    .title {
+      margin: 0px auto;
+      font-size: 18px;
+      text-align: center;
+    }
+    
+    .form {
+      width: 80%;
+      margin: 200px auto 0 auto;
+    }
+    
+    .form .item {
+      width: 100%;
+    }
+
+    .footer {
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    .footer .button {
+      width: 100%;
+      color: #fff;
+      background: #50a095;
+    }
   }
 </style>

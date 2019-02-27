@@ -1,9 +1,11 @@
 <template>
   <div class="admin-history-mon">
+    <Header :title="'查看月计划'"></Header>
     <div class="condition">
       <div class="item">
         <p class="title">选择日期：</p>
         <el-date-picker
+          class="picker"
           v-model="time"
           type="month"
           placeholder="选择月"
@@ -14,12 +16,12 @@
     <div class="button">
       <el-button class="btn" @click="init">查询</el-button>
     </div>
-    <el-collapse v-model="activeNames" @change="changeColl" accordion>
+    <el-collapse class="coll" v-model="activeNames" @change="changeColl" accordion>
       <el-collapse-item v-for="(item, index) in userList" class="col" :title="item.name + '的月计划'" :name="index">
-        <el-table :data="tableData">
+        <el-table class="table" :data="tableData">
           <el-table-column type="index" label="序号" width="50">
           </el-table-column>
-          <el-table-column label="类别" width="70">
+          <el-table-column label="类别" width="60">
             <template slot-scope="{row,$index}">
               <p>{{row.classify | filterClassify}}</p>
             </template>
@@ -29,7 +31,7 @@
               <p>({{row.dimension}}){{row.job}}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="time" label="时间" width="100"></el-table-column>
+          <el-table-column prop="time" label="时间" width="60"></el-table-column>
         </el-table>
       </el-collapse-item>
     </el-collapse>
@@ -38,6 +40,7 @@
 
 
 <script>
+  import Header from '../components/Header.vue'
   export default {
     data() {
       return {
@@ -108,12 +111,12 @@
           if (res.body.code === 200) {
             this.userList = JSON.parse(res.body.data)
           } else {
-            alert("请求失败")
+            this.$message('请求失败')
           }
         })
         .catch((err) => {
           console.log(err)
-          alert("请求失败")
+          this.$message('请求失败')
         })
       },
       changeTime() {
@@ -164,12 +167,15 @@
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
 <style>
+.admin-history-mon {
+  margin-top: 50px;
+}
 .admin-history-mon .el-collapse-item__header {
   padding-left: 15px;
   background: #50a095;
@@ -186,7 +192,7 @@
     text-align: center;
   }
   .condition {
-    margin-top: 20px;
+    padding-top: 20px;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -212,4 +218,20 @@
     display: flex;
     justify-content: space-between;
   }
+</style>
+<style>
+@media screen and (max-width: 700px) {
+  .admin-history-mon .condition .title {
+    font-size: 12px;
+  }
+  .admin-history-mon .condition .picker {
+    font-size: 12px;
+  }
+  .admin-history-mon .el-collapse-item__header {
+    font-size: 12px;
+  }
+  .admin-history-mon .table {
+    font-size: 12px;
+  }
+}
 </style>

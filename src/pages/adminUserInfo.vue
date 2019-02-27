@@ -1,6 +1,7 @@
 <template>
-  <div class="reset-table">
-    <el-table :data="tableData" stripe style="width: 100%">
+  <div class="admin-user-info">
+    <Header :title="'维护人员信息'"></Header>
+    <el-table class="table" :data="tableData" stripe style="width: 100%">
       <el-table-column type="index" label="序号" width="80">
       </el-table-column>
       <el-table-column prop="name" label="姓名">
@@ -25,6 +26,7 @@
 </template>
 
 <script>
+import Header from '../components/Header'
   export default {
     name: 'index',
     data() {
@@ -73,14 +75,14 @@
             failFg = true
           }
           if (failFg) {
-            alert('修改失败')
+            this.$message('修改失败')
           } else {
-            alert('修改成功')
+            this.$message('修改成功')
             history.go(-1)
           }
         })
         .catch(() => {
-          alert('修改失败')
+          this.$message('修改失败')
         })
         if (this.ajaxFg) {
           return
@@ -94,14 +96,14 @@
         .then((res) => {
           this.ajaxFg = false
           if (res.body.code === 200) {
-            alert('重置成功')
+            this.$message('重置成功')
           } else {
-            alert("重置失败")
+            this.$message('重置失败')
           }
         })
         .catch((err) => {
           this.ajaxFg = false
-          alert("重置失败")
+          this.$message('重置失败')
         })
       },
       getData() {
@@ -110,22 +112,25 @@
           if (res.body.code === 200) {
             this.tableData = JSON.parse(res.body.data)
           } else {
-            alert("请求失败")
+            this.$message('请求失败')
           }
         })
         .catch((err) => {
-          alert("请求失败")
+          this.$message('请求失败')
           console.log(err)
         })
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
 <style scoped>
+.admin-user-info {
+  margin-top: 50px;
+}
 .notify {
     margin-top: 40px;
     margin-bottom: 20px;
@@ -134,5 +139,16 @@
 .notify .btn {
   color: #fff;
   background: #50a095;
+}
+</style>
+
+<style>
+@media screen and (max-width: 700px) {
+  .admin-user-info .table {
+    font-size: 12px;
+  }
+  .admin-user-info .el-input__inner {
+    font-size: 12px;
+  }
 }
 </style>

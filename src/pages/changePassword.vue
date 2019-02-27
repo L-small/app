@@ -1,5 +1,6 @@
 <template>
-  <div class="login">
+  <div class="change-pass">
+    <Header :title="'修改密码'"></Header>
     <el-form class="form" ref="form" :model="form" label-width="80px">
       <!-- <el-form-item label="原密码">
         <el-input class="item" v-model="form.password"></el-input>
@@ -18,29 +19,8 @@
   </div>
 </template>
 
-<style scoped>
-  .title {
-    margin: 180px;
-    text-align: center;
-  }
-  
-  .form {
-    width: 400px;
-    margin: 70px auto 0 auto;
-  }
-  
-  .form .item {
-    width: 320px;
-  }
-
-  .form .button {
-    width: 150px;
-    color: #fff;
-    background: #50a095;
-  }
-</style>
-
 <script>
+import Header from '../components/Header'
   export default {
     data() {
       return {
@@ -91,7 +71,7 @@
         }
         this.ajaxFg = true
         if (this.form.password !== this.form.again) {
-          alert('请确认密码一致')
+          this.$message('请确认密码一致')
           return
         }
         let params = {
@@ -102,21 +82,61 @@
         .then((res) => {
           this.ajaxFg = false
           if (res.body.code === 200) {
-            alert('修改成功')
+            this.$message('请求成功')
             history.go(-1)
           } else {
-            alert("请求失败")
+            this.$message('请求失败')
           }
         })
         .catch((err) => {
           this.ajaxFg = false
-          alert("请求失败")
+          this.$message('请求失败')
         })
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
+<style scoped>
+  .change-pass {
+    margin-top: 50px;
+  }
+  .form {
+    width: 400px;
+    margin: 70px auto 0 auto;
+  }
+  
+  .form .item {
+    width: 320px;
+  }
+
+  .form .button {
+    width: 150px;
+    color: #fff;
+    background: #50a095;
+  }
+  @media screen and (max-width: 700px) {
+    .form {
+      width: 300px;
+    }
+    .form .item {
+      width: 220px;
+    }
+    .form .button {
+      width: 150px;
+    }
+  }
+</style>
+<style>
+@media screen and (max-width: 700px) {
+  .change-pass label{
+    font-size: 12px;
+  }
+  .change-pass input {
+    font-size: 12px;
+  }
+}
+</style>

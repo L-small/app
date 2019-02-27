@@ -1,24 +1,28 @@
   <template>
-    <div class="admin-mon-detail">
-      <el-table :data="details" stripe>
-        <el-table-column type="index" label="序号" width="80">
+    <div>
+      <Header :title="'计划详情'"></Header>
+      <div class="admin-mon-detail">
+        <el-table class="table" :data="details" stripe>
+          <el-table-column type="index" label="序号" width="80">
+          </el-table-column>
+          <el-table-column label="工作内容">
+            <template slot-scope="{row,$index}">
+              <p>({{row.dimension}}){{row.job}}</p>
+            </template>
+          </el-table-column>
+        <el-table-column prop="time" label="时间" width="100">
         </el-table-column>
-        <el-table-column label="工作内容">
-          <template slot-scope="{row,$index}">
-            <p>({{row.dimension}}){{row.job}}</p>
-          </template>
-        </el-table-column>
-      <el-table-column prop="time" label="时间" width="100">
-      </el-table-column>
-    </el-table>
-      <div class="footer">
-        <el-button class="btn" @click="submit(3)">驳回</el-button>
-        <el-button class="btn" type="success" @click="submit(2)">同意</el-button>
+      </el-table>
+        <div class="footer">
+          <el-button class="btn" @click="submit(3)">驳回</el-button>
+          <el-button class="btn" type="success" @click="submit(2)">同意</el-button>
+        </div>
       </div>
     </div>
   </template>
 
   <script>
+    import Header from '../components/Header.vue'
     export default {
       data() {
         return {
@@ -51,11 +55,11 @@
               this.ajaxData = JSON.parse(res.body.data)
               this.handleData()
             } else {
-              alert("请求失败")
+              this.$message('请求失败')
             }
           })
           .catch((err) => {
-            alert("请求失败")
+            this.$message('请求失败')
             console.log(err)
           })
         },
@@ -110,23 +114,27 @@
               failFg = true
             }
             if (failFg) {
-              alert('提交失败')
+              this.$message('提交失败')
             } else {
-              alert('提交成功')
+              this.$message('提交成功')
               history.go(-1)
             }
           })
           .catch(() => {
             this.ajaxFg = false
-            alert('提交失败')
+            this.$message('提交失败')
           })
         },
+      },
+      components: {
+        Header
       }
     }
   </script>
 
   <style scoped>
     .admin-mon-detail {
+      margin-top: 50px;
       padding: 15px;
       background: #fff;
     }
@@ -169,4 +177,15 @@
       width: 150px;
     }
   </style>
+  <style>
+  @media screen and (max-width: 700px) {
+  .admin-mon-detail .table {
+    font-size: 12px;
+  }
+  .admin-mon-detail .btn {
+    font-size: 12px;
+  }
+}
+  </style>
+  
   

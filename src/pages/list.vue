@@ -1,6 +1,7 @@
 <template>
   <div class="list">
-    <el-table :data="tableData" stripe style="width: 100%">
+    <Header :title="'管辖设备'"></Header>
+    <el-table class="table" :data="tableData" stripe style="width: 100%">
       <el-table-column type="index" label="序号" width="35">
       </el-table-column>
       <el-table-column prop="substationname" label="变电站名称" width="80">
@@ -23,11 +24,8 @@
   </div>
 </template>
 
-<style scoped>
-  
-</style>
-
 <script>
+  import Header from '../components/Header.vue'
   export default {
     data() {
       return {
@@ -93,17 +91,27 @@
             this.ajaxData = JSON.parse(res.body.data)
             this.handleData()
           } else {
-            alert(res.msg)
+            this.$message(res.msg)
           }
         })
         .catch((err) => {
-          alert(err)
+          this.$message(err)
         })
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
+<style scoped>
+.list {
+  margin-top: 50px;
+}
+@media screen and (max-width: 700px) {
+  .list .table{
+    font-size: 12px;
+  }
+}
+</style>

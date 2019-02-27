@@ -1,5 +1,6 @@
 <template>
   <div class="score">
+    <Header :title="'员工绩效'"></Header>
     <el-table :data="tableData" stripe style="width: 100%">
       <el-table-column prop="index" label="序号" width="50">
       </el-table-column>
@@ -103,7 +104,7 @@
     },
     methods: {
       submit() {
-        alert('评分成功');
+        this.$message('评分成功')
         history.go(-1);
       }
     },
@@ -114,6 +115,9 @@
 </script>
 
 <style scoped>
+.score {
+  margin-top: 50px;
+}
   .footer {
     position: fixed;
     bottom: 0;

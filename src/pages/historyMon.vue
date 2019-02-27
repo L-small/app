@@ -1,5 +1,6 @@
 <template>
-  <div class="score">
+  <div class="history-mon">
+    <Header :title="'查看月计划'"></Header>
     <div class="condition">
       <p class="title">选择日期：</p>
       <el-date-picker
@@ -13,7 +14,7 @@
     </div>
     <div v-if="userInfo.classify === '1' || userInfo.classify === '3'">
       <p class="class">生产类</p>
-      <el-table :data="tableData" stripe>
+      <el-table class="table" :data="tableData" stripe>
         <el-table-column type="index" label="序号" width="80">
         </el-table-column>
         <el-table-column label="工作内容">
@@ -27,7 +28,7 @@
     </div>
     <div v-if="userInfo.classify === '2' || userInfo.classify === '3'">
       <p class="class">辅助类</p>
-      <el-table :data="assistData" stripe>
+      <el-table class="table" :data="assistData" stripe>
         <el-table-column type="index" label="序号" width="80">
         </el-table-column>
         <el-table-column label="工作内容">
@@ -43,6 +44,7 @@
 </template>
 
 <script>
+  import Header from '../components/Header.vue'
   export default {
     name: 'score',
     data() {
@@ -85,14 +87,17 @@
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
 <style scoped>
+.history-mon {
+  margin-top: 50px;
+}
 .condition {
-  margin-top: 20px;
+  padding-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -115,4 +120,22 @@
   color: #fff;
   background: #50a095;
 }
+
 </style>
+<style>
+@media screen and (max-width: 700px) {
+  .history-mon .title {
+    font-size: 12px;
+  }
+  .history-mon input {
+    font-size: 12px;
+  }
+  .history-mon .class {
+    font-size: 14px;
+  }
+  .history-mon .table {
+    font-size: 12px;
+  }
+}
+</style>
+

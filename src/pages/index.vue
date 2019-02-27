@@ -1,5 +1,6 @@
 <template>
   <div class="index">
+    <Header :title="'设备主人'"></Header>
     <div class="user" v-if="userInfo.name">
       <p>当前用户：{{userInfo.name}}</p>
       <p>用户类别：{{userInfo.classify === '1' ? '生产类' : '辅助类'}}</p>
@@ -18,6 +19,7 @@
 </template>
 
 <script>
+  import Header from '../components/Header.vue'
   export default {
     data() {
       return {
@@ -96,12 +98,15 @@
       }
     },
     components: {
-  
+      Header
     }
   }
 </script>
 
 <style scoped>
+.index {
+  margin-top: 50px;
+}
   .content {
     padding: 15px;
   }
@@ -109,12 +114,14 @@
   .user {
     display: flex;
     justify-content: space-between;
-    height: 40px;
+    height: 35px;
     padding: 0 15px;
-    line-height: 40px;
+    line-height: 35px;
     font-size: 14px;
-    background: #50a095;
-    color: #fff;
+    /* background: #48a4bf; */
+    background: #fff;
+    color: #000;
+    border-bottom: 1px solid #ddd;
   }
 
   .fun {
@@ -167,7 +174,24 @@
     margin-bottom: 15px;
   }
   
-  .item.icon {
-    /* background: #50a095; */
+
+  @media screen and (max-width: 700px) {
+    .user {
+      font-size: 12px;
+    }
+    .item {
+      width: auto;
+      height: 80px;
+      margin: 10px auto;
+      padding: 10px 0px 0px;
+      text-align: center;
+      color: #333;
+      font-size: 12px;
+    }
+    .item img {
+      width: 35px;
+      height: 35px;
+      margin-bottom: 8px;
+    }
   }
 </style>
