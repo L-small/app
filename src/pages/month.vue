@@ -51,7 +51,7 @@ import Header from '../components/Header'
     created() {
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.defaultTime = new Date()
-      this.defaultTime.setMonth(new Date().getMonth() + 1)
+      // this.defaultTime.setMonth(new Date().getMonth() + 1)
       this.verify()
       this.init()
     },
@@ -83,7 +83,7 @@ import Header from '../components/Header'
               }
             })
             if (flag) {
-              this.$message("已经编辑过下月计划")
+              this.$message("已经编辑过月计划")
               history.go(-1)
             }
           }
@@ -122,15 +122,6 @@ import Header from '../components/Header'
         const month = time.getMonth() + 1
         const day = time.getDay()
         return `${year}-${month}-${day}`
-      },
-      nextMonth() {
-        let month = new Date().getMonth() + 1
-        if (month + 1 > 12) {
-          month = 1
-        } else {
-          month = month + 1
-        }
-        return month
       },
       again() {
         const data = []

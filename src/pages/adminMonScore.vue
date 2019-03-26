@@ -98,8 +98,8 @@
           list.push({
             id: item.id,
             name: item.name,
-            totalValue: '',
-            addValue: ''
+            totalValue: item.totalvalue,
+            addValue: item.addvalue
           })
         })
         this.tableData = list
@@ -113,7 +113,12 @@
         }     
       },
       getData() {
-        this.$http.get('http://112.74.55.229:8090/bc/getalluser.xhtml')
+        let params = {
+          month: new Date().getMonth() + 1,
+          id: this.userInfo.id
+        }
+        this.$http.get('http://112.74.55.229:8090/bc/getalluseraddvalue.xhtml', {params: params})
+        // this.$http.get('http://112.74.55.229:8090/bc/getalluser.xhtml')
         .then((res) => {
           if (res.body.code === 200) {
             this.ajaxData = JSON.parse(res.body.data)

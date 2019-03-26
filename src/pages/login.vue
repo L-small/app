@@ -44,7 +44,9 @@
         userNames: [],
         userInfo: {},
         ajaxFg: false,
-        scoreList: []
+        scoreList: [],
+        user1: [],
+        user2: []
       }
     },
     created() {
@@ -97,7 +99,7 @@
       init() {
         if (localStorage.getItem('userInfo')) {
           this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-          if (this.userInfo.uid === '1') {
+            if (this.userInfo.name === '田金周' || this.userInfo.name === '杨锐' || this.userInfo.name === '杨咏梅' || this.userInfo.name === '马锦波2') {
             this.$router.push({name: 'adminIndex'})
             } else {
             this.$router.push({name: 'index'})
@@ -106,6 +108,7 @@
       },
       changeClass() {
         this.userNames = userList.user[this.form.group].list
+        // this.userNames = 
       },
       changeUser() {
         this.form.password = ''
@@ -132,7 +135,7 @@
           if (res.body.code === 200) {
             localStorage.setItem('userInfo', JSON.stringify(JSON.parse(res.body.data)[0]))
             this.userInfo = JSON.parse(res.body.data)[0]
-            if (this.userInfo.uid === '1') {
+            if (this.userInfo.name === '田金周' || this.userInfo.name === '杨锐' || this.userInfo.name === '杨咏梅' || this.userInfo.name === '马锦波2') {
               this.$router.push({name: 'adminIndex'})
             } else {
               this.$router.push({name: 'index'})
@@ -147,6 +150,19 @@
           console.log(err)
         })
       },
+      // getName() {
+      //   this.$http.get('http://112.74.55.229:8090/bc/getalluser.xhtml')
+      //   .then((res) => {
+      //     if (res.body.code === 200) {
+      //       const data = JSON.parse(res.body.data);
+      //       this.handleName(data);
+      //     }
+      //   })
+      // },
+      // handleName(data) {
+      //   data.map((item) => {
+      //   })
+      // },
       getToday() {
         const params = {
           id: this.userInfo.id
