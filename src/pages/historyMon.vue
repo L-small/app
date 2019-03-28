@@ -77,6 +77,8 @@
         })
       },
       handleData() {
+        this.tableData = [];
+        this.assistData = [];
         this.ajaxData.map((item) => {
           if (item.classify === '1') {
             this.tableData.push(item)
